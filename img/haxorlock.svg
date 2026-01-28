@@ -1,0 +1,41 @@
+<svg version="1.1" id="HaxorAI_Lock" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="200px" height="200px" viewBox="0 0 200 200" xml:space="preserve">
+  
+  <!-- Background Persegi -->
+  <rect x="0" y="0" width="200" height="200" fill="transparent" rx="20"/>
+  
+  <!-- Handle Gembok -->
+  <path d="M66.1,128.1V59.9c0-18.4,14.9-33.3,33.3-33.3s33.3,14.9,33.3,33.3v36.8" 
+    style="fill:none; stroke:#0073e5; stroke-width:14; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:10;"/>
+
+  <!-- Body Gembok -->
+  <g id="lock-body" style="transform: translateY(-22px); transition: transform 0.3s ease-in-out;">
+    <rect x="59" y="117.5" width="14.5" height="4.7" style="opacity:0.6; fill:white;"/>
+    <path d="M49.8,175.7c0,3.9,3.1,7,7,7H142c3.8,0,7-3.1,7-7v-48.3c0-3.8-3.2-7-7-7H56.8c-3.9,0-7,3.2-7,7V175.7z" 
+      style="fill:#0073e5;"/>
+
+    <!-- Lubang Kunci / Ikon Jaringan -->
+    <g id="network" style="transform: translateY(0); transition: transform 0.3s ease-in-out;">
+      <line x1="111.4" y1="141.6" x2="111.4" y2="162.1" 
+        style="fill:none; stroke:white; stroke-width:7; stroke-miterlimit:10;"/>
+      <line x1="99.4" y1="147.4" x2="99.4" y2="162.1" 
+        style="fill:none; stroke:white; stroke-width:7; stroke-miterlimit:10;"/>
+      <line x1="87.4" y1="151.8" x2="87.4" y2="162.1" 
+        style="fill:none; stroke:white; stroke-width:7; stroke-miterlimit:10;"/>
+    </g>
+  </g>
+
+  <!-- Animasi Hover (gunakan JavaScript atau CSS di luar jika perlu) -->
+  <script>
+    document.getElementById('lock-body').addEventListener('mouseover', function() {
+      this.style.transform = 'translateY(-5px)';
+      document.getElementById('network').style.transform = 'translateY(-5px)';
+    });
+
+    document.getElementById('lock-body').addEventListener('mouseout', function() {
+      this.style.transform = 'translateY(-22px)';
+      document.getElementById('network').style.transform = 'translateY(0)';
+    });
+  </script>
+
+</svg>

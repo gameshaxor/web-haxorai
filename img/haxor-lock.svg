@@ -1,0 +1,59 @@
+<svg version="1.1" id="HaxorAI_Lock" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="200px" height="200px" viewBox="0 0 200 200" xml:space="preserve">
+  
+  <!-- Definisi Gaya -->
+  <style>
+    .st0 { opacity:0.6; fill:white; }
+    .st1 { fill:#0073e5; }
+    .st2 { fill:none; stroke:white; stroke-width:7; stroke-miterlimit:10; }
+    
+    .handle {
+      fill: none;
+      stroke: #0073e5;
+      stroke-width: 14;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10;
+    }
+    
+    /* Posisi Awal: Body Gembok Tetap Terangkat, Ikon Jaringan Berada di Dalam */
+    .lock-body {
+      transform: translateY(-22px);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .network {
+      transform: translateY(0); /* Awalnya di dalam body gembok */
+      transition: transform 0.3s ease-in-out;
+    }
+
+    /* Saat Hover: Body Gembok & Jaringan Naik Bersama */
+    .lock-body:hover {
+      transform: translateY(-5px);
+    }
+
+    .lock-body:hover .network {
+      transform: translateY(-5px);
+    }
+  </style>
+  
+  <!-- Background Persegi -->
+  <rect x="0" y="0" width="200" height="200" fill="transparent" rx="20"/>
+
+  <!-- Handle Gembok -->
+  <path class="handle" d="M66.1,128.1V59.9c0-18.4,14.9-33.3,33.3-33.3s33.3,14.9,33.3,33.3v36.8"/>
+
+  <!-- Body Gembok -->
+  <g class="lock-body">
+    <rect x="59" y="117.5" class="st0" width="14.5" height="4.7"/>
+    <path class="st1" d="M49.8,175.7c0,3.9,3.1,7,7,7H142c3.8,0,7-3.1,7-7v-48.3c0-3.8-3.2-7-7-7H56.8c-3.9,0-7,3.2-7,7V175.7z"/>
+    
+    <!-- Lubang Kunci / Ikon Jaringan -->
+    <g class="network">
+      <line class="st2" x1="111.4" y1="141.6" x2="111.4" y2="162.1"/>
+      <line class="st2" x1="99.4" y1="147.4" x2="99.4" y2="162.1"/>
+      <line class="st2" x1="87.4" y1="151.8" x2="87.4" y2="162.1"/>
+    </g>
+  </g>
+
+</svg>
