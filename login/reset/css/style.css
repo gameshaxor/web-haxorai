@@ -1,0 +1,105 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, rgb(22 44 70), rgb(27 40 56));
+    color: #fff;
+    padding: 20px;
+}
+
+.container {
+    background: rgb(23 26 33);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Menengahkan secara horizontal */
+    justify-content: center; /* Menengahkan secara vertikal jika perlu */
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 14px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    color: #ddd;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+}
+
+input::placeholder {
+    color: #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(90deg, #06BFFF 30%, #2D73FF 100%);
+}
+
+button:disabled {
+    background: #777;
+    cursor: not-allowed;
+}
+
+.back-link {
+    display: block;
+    margin-top: 15px;
+    color: #58a6ff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.back-link:hover {
+    color: #2D73FF;
+    text-decoration: underline;
+}
+
+.lock-icon {
+    width: 100px;
+    height: 100px;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJIYXhvckFJX0xvY2siIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMDBweCIgaGVpZ2h0PSIxMDBweCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPgoKICAgICAgICAgICAgPCEtLSBCYWNrZ3JvdW5kIFBlcnNlZ2kgLS0+CiAgICAgICAgICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ0cmFuc3BhcmVudCIgcng9IjIwIiAvPgoKICAgICAgICAgICAgPCEtLSBIYW5kbGUgR2VtYm9rIC0tPgogICAgICAgICAgICA8cGF0aCBkPSJNNjYuMSwxMjguMVY1OS45YzAtMTguNCwxNC45LTMzLjMsMzMuMy0zMy4zczMzLjMsMTQuOSwzMy4zLDMzLjN2MzYuOCIgc3R5bGU9ImZpbGw6bm9uZTsgc3Ryb2tlOndoaXRlc21va2U7IHN0cm9rZS13aWR0aDoxNDsgc3Ryb2tlLWxpbmVjYXA6cm91bmQ7IHN0cm9rZS1saW5lam9pbjpyb3VuZDsgc3Ryb2tlLW1pdGVybGltaXQ6MTA7IiAvPgoKICAgICAgICAgICAgPCEtLSBCb2R5IEdlbWJvayAtLT4KICAgICAgICAgICAgPGcgaWQ9ImxvY2stYm9keSIgc3R5bGU9InRyYW5zZm9ybTogdHJhbnNsYXRlWSgtMjJweCk7IHRyYW5zaXRpb246IHRyYW5zZm9ybSAwLjNzIGVhc2UtaW4tb3V0OyI+CiAgICAgICAgICAgICAgICA8cmVjdCB4PSI1OSIgeT0iMTE3LjUiIHdpZHRoPSIxNC41IiBoZWlnaHQ9IjQuNyIgc3R5bGU9Im9wYWNpdHk6MC42OyBmaWxsOmdyZXk7IiAvPgogICAgICAgICAgICAgICAgPHBhdGggZD0iTTQ5LjgsMTc1LjdjMCwzLjksMy4xLDcsNyw3SDE0MmMzLjgsMCw3LTMuMSw3LTd2LTQ4LjNjMC0zLjgtMy4yLTctNy03SDU2LjhjLTMuOSwwLTcsMy4yLTcsN1YxNzUuN3oiIHN0eWxlPSJmaWxsOmhzbCgyMTcsIDgzJSwgNTAlKTsiIC8+CgogICAgICAgICAgICAgICAgPCEtLSBMdWJhbmcgS3VuY2kgLyBJa29uIEphcmluZ2FuIC0tPgogICAgICAgICAgICAgICAgPGcgaWQ9Im5ldHdvcmsiIHN0eWxlPSJ0cmFuc2Zvcm06IHRyYW5zbGF0ZVkoMCk7IHRyYW5zaXRpb246IHRyYW5zZm9ybSAwLjNzIGVhc2UtaW4tb3V0OyI+CiAgICAgICAgICAgICAgICAgICAgPGxpbmUgeDE9IjExMS40IiB5MT0iMTQxLjYiIHgyPSIxMTEuNCIgeTI9IjE2Mi4xIiBzdHlsZT0iZmlsbDpub25lOyBzdHJva2U6d2hpdGU7IHN0cm9rZS13aWR0aDo3OyBzdHJva2UtbWl0ZXJsaW1pdDoxMDsiIC8+CiAgICAgICAgICAgICAgICAgICAgPGxpbmUgeDE9Ijk5LjQiIHkxPSIxNDcuNCIgeDI9Ijk5LjQiIHkyPSIxNjIuMSIgc3R5bGU9ImZpbGw6bm9uZTsgc3Ryb2tlOndoaXRlOyBzdHJva2Utd2lkdGg6Nzsgc3Ryb2tlLW1pdGVybGltaXQ6MTA7IiAvPgogICAgICAgICAgICAgICAgICAgIDxsaW5lIHgxPSI4Ny40IiB5MT0iMTUxLjgiIHgyPSI4Ny40IiB5Mj0iMTYyLjEiIHN0eWxlPSJmaWxsOm5vbmU7IHN0cm9rZTp3aGl0ZTsgc3Ryb2tlLXdpZHRoOjc7IHN0cm9rZS1taXRlcmxpbWl0OjEwOyIgLz4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvc3ZnPg=='); /* Base64 dari SVG */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
