@@ -1,0 +1,248 @@
+/* colors */
+html {
+    width: 100%;
+    height: 100%;
+  }
+  
+  body {
+    background-color: #1b2838;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    background-color: #171a21;
+    margin: 0;
+    padding: 1.10em;
+    box-sizing: border-box;
+    border: solid 3px #2f3138;
+    border-radius: 0.5em;
+    font-family: "Source Sans Pro", sans-serif;
+  }
+  form .svgContainer {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1em;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  form .svgContainer div {
+    position: relative;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 50%;
+    padding-bottom: 100%;
+  }
+  form .svgContainer .mySVG {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  form .svgContainer .mySVG::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDwhLS0gS3VhZHJhbiAxIC0tPgogICAgPHBhdGggZD0iTTUwLDUwIEw1MCw1IEE0NSw0NSAwIDAsMSA5NSw1MCBaIiBmaWxsPSIjRUE0MzM1IiAvPgogICAgPCEtLSBLdWFkcmFuIDIgLS0+CiAgICA8cGF0aCBkPSJNNTAsNTAgTDk1LDUwIEE0NSw0NSAwIDAsMSA1MCw5NSBaIiBmaWxsPSIjNDI4NUY0IiAvPgogICAgPCEtLSBLdWFkcmFuIDMgLS0+CiAgICA8cGF0aCBkPSJNNTAsNTAgTDUwLDk1IEE0NSw0NSAwIDAsMSA1LDUwIFoiIGZpbGw9IiMzNEE4NTMiIC8+CiAgICA8IS0tIEt1YWRyYW4gNCAtLT4KICAgIDxwYXRoIGQ9Ik01MCw1MCBMNSw1MCBBNDUsNDUgMCAwLDEgNTAsNSBaIiBmaWxsPSIjRkJCQzA1IiAvPgogICAgPCEtLSBHYXJpcyB0ZW5nYWggLS0+CiAgICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0NSIgc3Ryb2tlPSJyZ2IoMjcgNDAgNTYpIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiIC8+CiAgICA8IS0tIE1hc2sgU2hhcGUgLS0+CiAgICA8cGF0aCBkPSJNODAgNTAgQTMwIDMwIDAgMSAxIDIwIDUwIEEzMCAzMCAwIDEgMSA4MCA1MFoiIGZpbGw9InVybCgjZ3JhZDIpIiBzdHJva2U9IndoaXRlc21va2UiIHN0cm9rZS13aWR0aD0iMiIgLz4KCiAgICA8IS0tIEhheG9yIExvY2sgSWNvbiAtLT4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDMwLCAzMCkgc2NhbGUoMSkiPiA8IS0tIERpc2VzdWFpa2FuIGxlYmloIGtlIGF0YXMgLS0+CiAgICAgICAgPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJIYXhvckFJX0xvY2siIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI0MHB4IiBoZWlnaHQ9IjQwcHgiIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KCiAgICAgICAgICAgIDwhLS0gQmFja2dyb3VuZCBQZXJzZWdpIC0tPgogICAgICAgICAgICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idHJhbnNwYXJlbnQiIHJ4PSIyMCIgLz4KCiAgICAgICAgICAgIDwhLS0gSGFuZGxlIEdlbWJvayAtLT4KICAgICAgICAgICAgPHBhdGggZD0iTTY2LjEsMTI4LjFWNTkuOWMwLTE4LjQsMTQuOS0zMy4zLDMzLjMtMzMuM3MzMy4zLDE0LjksMzMuMywzMy4zdjM2LjgiIHN0eWxlPSJmaWxsOm5vbmU7IHN0cm9rZTp3aGl0ZXNtb2tlOyBzdHJva2Utd2lkdGg6MTQ7IHN0cm9rZS1saW5lY2FwOnJvdW5kOyBzdHJva2UtbGluZWpvaW46cm91bmQ7IHN0cm9rZS1taXRlcmxpbWl0OjEwOyIgLz4KCiAgICAgICAgICAgIDwhLS0gQm9keSBHZW1ib2sgLS0+CiAgICAgICAgICAgIDxnIGlkPSJsb2NrLWJvZHkiIHN0eWxlPSJ0cmFuc2Zvcm06IHRyYW5zbGF0ZVkoLTIycHgpOyB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4zcyBlYXNlLWluLW91dDsiPgogICAgICAgICAgICAgICAgPHJlY3QgeD0iNTkiIHk9IjExNy41IiB3aWR0aD0iMTQuNSIgaGVpZ2h0PSI0LjciIHN0eWxlPSJvcGFjaXR5OjAuNjsgZmlsbDpncmV5OyIgLz4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik00OS44LDE3NS43YzAsMy45LDMuMSw3LDcsN0gxNDJjMy44LDAsNy0zLjEsNy03di00OC4zYzAtMy44LTMuMi03LTctN0g1Ni44Yy0zLjksMC03LDMuMi03LDdWMTc1Ljd6IiBzdHlsZT0iZmlsbDpoc2woMjE3LCA4MyUsIDUwJSk7IiAvPgoKICAgICAgICAgICAgICAgIDwhLS0gTHViYW5nIEt1bmNpIC8gSWtvbiBKYXJpbmdhbiAtLT4KICAgICAgICAgICAgICAgIDxnIGlkPSJuZXR3b3JrIiBzdHlsZT0idHJhbnNmb3JtOiB0cmFuc2xhdGVZKDApOyB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4zcyBlYXNlLWluLW91dDsiPgogICAgICAgICAgICAgICAgICAgIDxsaW5lIHgxPSIxMTEuNCIgeTE9IjE0MS42IiB4Mj0iMTExLjQiIHkyPSIxNjIuMSIgc3R5bGU9ImZpbGw6bm9uZTsgc3Ryb2tlOndoaXRlOyBzdHJva2Utd2lkdGg6Nzsgc3Ryb2tlLW1pdGVybGltaXQ6MTA7IiAvPgogICAgICAgICAgICAgICAgICAgIDxsaW5lIHgxPSI5OS40IiB5MT0iMTQ3LjQiIHgyPSI5OS40IiB5Mj0iMTYyLjEiIHN0eWxlPSJmaWxsOm5vbmU7IHN0cm9rZTp3aGl0ZTsgc3Ryb2tlLXdpZHRoOjc7IHN0cm9rZS1taXRlcmxpbWl0OjEwOyIgLz4KICAgICAgICAgICAgICAgICAgICA8bGluZSB4MT0iODcuNCIgeTE9IjE1MS44IiB4Mj0iODcuNCIgeTI9IjE2Mi4xIiBzdHlsZT0iZmlsbDpub25lOyBzdHJva2U6d2hpdGU7IHN0cm9rZS13aWR0aDo3OyBzdHJva2UtbWl0ZXJsaW1pdDoxMDsiIC8+CiAgICAgICAgICAgICAgICA8L2c+CiAgICAgICAgICAgIDwvZz4KICAgICAgICA8L3N2Zz4KICAgIDwvZz4KCiAgICA8IS0tIENpcmN1aXQgRGV0YWlscyAtLT4KICAgIDxsaW5lIHgxPSI1MCIgeTE9IjIwIiB4Mj0iNTAiIHkyPSI5IiBzdHJva2U9IndoaXRlc21va2UiIHN0cm9rZS13aWR0aD0iMiIgLz4KICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iOCIgcj0iMiIgZmlsbD0id2hpdGVzbW9rZSIgLz4KICAgIDxsaW5lIHgxPSI4MCIgeTE9IjUwIiB4Mj0iOTMiIHkyPSI1MCIgc3Ryb2tlPSJ3aGl0ZXNtb2tlIiBzdHJva2Utd2lkdGg9IjIiIC8+CiAgICA8Y2lyY2xlIGN4PSI5MiIgY3k9IjUwIiByPSIyIiBmaWxsPSJ3aGl0ZXNtb2tlIiAvPgogICAgPGxpbmUgeDE9IjIwIiB5MT0iNTAiIHgyPSI3IiB5Mj0iNTAiIHN0cm9rZT0id2hpdGVzbW9rZSIgc3Ryb2tlLXdpZHRoPSIyIiAvPgogICAgPGNpcmNsZSBjeD0iOCIgY3k9IjUwIiByPSIyIiBmaWxsPSJ3aGl0ZXNtb2tlIiAvPgogICAgPGxpbmUgeDE9IjUwIiB5MT0iOTMiIHgyPSI1MCIgeTI9IjgwIiBzdHJva2U9IndoaXRlc21va2UiIHN0cm9rZS13aWR0aD0iMiIgLz4KICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iOTIiIHI9IjIiIGZpbGw9IndoaXRlc21va2UiIC8+CgogICAgPCEtLSBMb25lQ2lwaGVyIEN1cnZlZCBUZXh0IEluc2lkZSBGYWNlIC0tPgogICAgPGRlZnM+CiAgICAgICAgPHBhdGggaWQ9ImlubmVyQ3VydmUiIGQ9Ik0zMCA3MCBRNTAgODUsIDcwIDcwIiBmaWxsPSJ0cmFuc3BhcmVudCIgLz4KICAgICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQxIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IHJnYigyNyA0MCA1Nik7IHN0b3Atb3BhY2l0eTogMSIgLz4KICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjogcmdiKDI3IDQwIDU2KTsgc3RvcC1vcGFjaXR5OiAxIiAvPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkMiIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgICAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiByZ2IoMjcgNDAgNTYpOyBzdG9wLW9wYWNpdHk6IDEiIC8+CiAgICAgICAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IHJnYigyNyA0MCA1Nik7IHN0b3Atb3BhY2l0eTogMSIgLz4KICAgICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPC9kZWZzPgogICAgCiAgICA8IS0tIENvcHlyaWdodCDCqSAyMDI1IHNhbXVlbHBhc2FyaWJ1LmNvbSAtLT4KICAgIDx0ZXh0IGZvbnQtc2l6ZT0iNSIgZmlsbD0iZ3JleSIgZm9udC1mYW1pbHk9IidzeXN0ZW0tdWknLCBtb25vc3BhY2UiIHRleHQtYW5jaG9yPSJtaWRkbGUiPgogICAgICAgIDx0ZXh0UGF0aCBocmVmPSIjaW5uZXJDdXJ2ZSIgc3RhcnRPZmZzZXQ9IjUwJSI+d3d3LmhheG9yYWkuY29tPC90ZXh0UGF0aD4KICAgIDwvdGV4dD4KCjwvc3ZnPg==') no-repeat center center;
+    background-size: contain;
+}
+  form .svgContainer:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: inherit;
+    height: inherit;
+    box-sizing: border-box;
+    border-top: 3px solid #EA4335;
+    border-bottom: 3px solid #34A853;
+    border-left: 3px solid #FBBC05;
+    border-right: 3px solid #4285F4;
+    border-radius: 50%;
+  }
+  form .inputGroup {
+    margin: 0 0 10px;
+    padding: 0;
+    position: relative;
+  }
+  form .inputGroup:last-of-type {
+    margin-bottom: 0;
+  }
+  form label {
+    margin: 0 0 12px;
+    display: block;
+    font-size: 1.25em;
+    color: #ffffff;
+    font-weight: 700;
+    font-family: inherit;
+  }
+  form input[type=email], form input[type=text], form input[type=number], form input[type=url], form input[type=search], form input[type=password] {
+    display: block;
+    margin: 0;
+    padding: 0 1em 0;
+    padding: 0.875em 1em 0;
+    background-color: #f3fafd;
+    border: solid 2px #9E9E9E;
+    border-radius: 4px;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    width: 100%;
+    height: 60px;
+    font-size: 1.55em;
+    color: #353538;
+    font-weight: 600;
+    font-family: inherit;
+    transition: box-shadow 0.2s linear, border-color 0.25s ease-out;
+  }
+  form input[type=email]:focus, form input[type=text]:focus, form input[type=number]:focus, form input[type=url]:focus, form input[type=search]:focus, form input[type=password]:focus {
+    outline: none;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    border: solid 2px #34A853;
+  }
+  form button {
+    display: block;
+    margin: 0;
+    padding: 0.60em 1em 1em;
+    background: linear-gradient(90deg, #06BFFF 0%, #2D73FF 100%);
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    box-shadow: none;
+    width: 100%;
+    height: 50px;
+    font-size: 1.30em;
+    color: #fff;
+    font-weight: 600;
+    font-family: inherit;
+    transition: background-color 0.2s ease-out;
+  }
+  form button:hover {
+    background: linear-gradient(90deg, #06BFFF 30%, #2D73FF 100%);
+  }
+  form button:active {
+    background: linear-gradient(90deg, #06BFFF 50%, #2D73FF 100%);
+  }
+  form .inputGroup1 .helper {
+    position: absolute;
+    z-index: 1;
+    font-family: inherit;
+  }
+  form .inputGroup1 .helper1 {
+    top: 0;
+    left: 0;
+    transform: translate(1em, 2.2em) scale(1);
+    transform-origin: 0 0;
+    color: #353538;
+    font-size: 1.55em;
+    font-weight: 400;
+    opacity: 0.65;
+    pointer-events: none;
+    transition: transform 0.2s ease-out, opacity 0.2s linear;
+  }
+  form .inputGroup1.focusWithText .helper {
+    transform: translate(1em, 1.55em) scale(0.6);
+    opacity: 1;
+  }
+  form .inputGroup2 input[type=password] {
+    padding: 0.4em 1em 0.5em;
+  }
+  form .inputGroup2 input[type=text] {
+    padding: 0.025em 1em 0;
+  }
+  form .inputGroup2 #showPasswordToggle {
+    display: block;
+    padding: 0 0 0 1.45em;
+    position: absolute;
+    top: 0.25em;
+    right: 0;
+    font-size: 1em;
+  }
+  form .inputGroup2 #showPasswordToggle input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+  }
+  form .inputGroup2 #showPasswordToggle .indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0.85em;
+    width: 0.85em;
+    background-color: #f3fafd;
+    border: solid 2px #9E9E9E;
+    border-radius: 3px;
+  }
+  form .inputGroup2 #showPasswordToggle .indicator:after {
+    content: "";
+    position: absolute;
+    left: 0.25em;
+    top: 0.025em;
+    width: 0.2em;
+    height: 0.5em;
+    border: solid #353538;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+    visibility: hidden;
+  }
+  form .inputGroup2 #showPasswordToggle input:checked ~ .indicator:after {
+    visibility: visible;
+  }
+  form .inputGroup2 #showPasswordToggle input:focus ~ .indicator, form .inputGroup2 #showPasswordToggle input:hover ~ .indicator {
+    border-color: #9E9E9E;
+  }
+  form .inputGroup2 #showPasswordToggle input:disabled ~ .indicator {
+    opacity: 0.5;
+  }
+  form .inputGroup2 #showPasswordToggle input:disabled ~ .indicator:after {
+    visibility: hidden;
+  }
+
+  .error {
+    color: red;
+    margin-top: 10px;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.logingoogle {
+  background: rgb(237 237 237);
+  color: rgb(43 43 43);
+}
+.logingoogle:hover {
+  background: #d0d0d0;
+}
+
+.toggle-form {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: white;
+}
+
+.toggle-form a {
+  color: #58a6ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.toggle-form a:hover {
+  text-decoration: underline;
+}
