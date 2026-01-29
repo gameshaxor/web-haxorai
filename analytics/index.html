@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Description untuk halaman web -->
+    <meta name="description" content="Explore random HTML files uploaded by users on HaxorAI Explorer. View file statistics, file sharing, and web development projects seamlessly." />
+
+    <!-- Kata kunci yang relevan dengan fitur yang ada di website -->
+    <meta name="keywords" content="HaxorAI, file explorer, file statistics, random HTML files, user uploaded files, file views, Firebase, file sharing, web development, explore HTML files, upload HTML projects" />
+
+    <!-- Informasi penulis untuk SEO -->
+    <meta name="author" content="Samuel Pasaribu" />
+
+    <!-- Open Graph untuk optimasi media sosial -->
+    <meta property="og:title" content="HaxorAI Explorer - File Statistics" />
+    <meta property="og:description" content="Browse, explore, and analyze random HTML files with their view statistics on HaxorAI Explorer. A platform for web developers." />
+    <meta property="og:image" content="https://web.haxorai.com/analytics/img/analytics.png" />
+    <meta property="og:url" content="https://web.haxorai.com/analytics" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="HaxorAI Explorer - File Statistics" />
+    <meta name="twitter:description" content="Browse, explore, and analyze random HTML files with their view statistics on HaxorAI Explorer. A platform for web developers." />
+    <meta name="twitter:image" content="https://web.haxorai.com/analytics/img/analytics.png" />
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://web.haxorai.com/img/favicon.svg">
+
+    <!-- Link to external CSS (style for the page) -->
+    <link rel="stylesheet" href="css/style.css?v=1.0.0">
+
+    <!-- External JS libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" defer></script>
+
+    <!-- Additional Meta Tags for SEO and Social Media -->
+    <meta name="robots" content="index, follow">
+    <meta name="rating" content="general">
+    <meta name="theme-color" content="#031525">
+    <meta name="referrer" content="no-referrer">
+    <meta name="format-detection" content="telephone=no">
+
+    <title>Analytics | HaxorAI Web</title>
+</head>
+
+<body>
+    <!-- Menu Top Navigation -->
+    <div class="topnav" id="myTopnav">
+        <a style="animation:none;text-decoration:none;" href="https://web.haxorai.com" onclick="setActive(this)"><i class="haxorai"></i> <span class="adapelangi">Data Statistics</span><span class="loading adapelangi" id="loadingText">...</span></a>
+        <a id="menuIcon" href="javascript:;" class="icon" aria-label="menu">
+            <svg id="icon-home" viewBox="0 0 24 24">
+                <path d="M1 17h22v2h-22v-2zm0-12v2h22v-2h-22zm0 8h22v-2h-22v2z" fill="#d3e3fd"></path>
+            </svg>
+        </a>
+        <div class="menu-items">
+            <a style="animation: none;" href="../" onclick="setActive(this)">Beranda</a>
+            <a style="animation: none;" href="../explorer/" target="_blank" rel="noopener noreferrer" onclick="setActive(this)">Explorer</a>
+            <a style="animation: none;" href="../cybermap/" target="_blank" rel="noopener noreferrer" onclick="setActive(this)">Cybermap</a>
+            <a style="animation: none;" href="../generator/" target="_blank" rel="noopener noreferrer" onclick="setActive(this)">Generator</a>
+            <a style="animation: none;" href="https://anonymous.haxorai.com/codepad/" target="_blank" rel="noopener noreferrer" onclick="setActive(this)">Codepad</a>
+            <a style="animation: none;" href="../console/" target="_blank" rel="noopener noreferrer" onclick="setActive(this)">Console</a>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <h1><i class="analytics"></i> File Upload Insights</h1>
+        <button id="toggleChart" style="margin-bottom: 10px;">Change Chart Type 📊</button>
+        <canvas id="fileChart"></canvas>
+    </div>
+
+    <h2>Cyber File Popularity Rankings</h2>
+
+    <div class="file-grid-container" id="fileGrid">
+        <!-- Dynamic Grid will be populated here -->
+    </div>
+
+    <!-- Tombol Back To Top -->
+    <button id="backToTop" class="back-to-top">▲</button>
+
+    <!-- Di balik layar hitam, aku menari dengan bayangan, mengurai misteri semesta digital. Kode adalah puisiku, dan setiap celah adalah cerita yang belum terungkap. -->
+    <script src="javascript/script.js?v=1.0.0" defer></script>
+</body>
+
+</html>
