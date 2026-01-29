@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Edit File HTML</title>
+<meta name="description" content="Edit file HTML langsung di browser menggunakan HaxorAI Editor. Update file ke server dengan mudah dan aman melalui sistem Firebase." />
+<meta name="keywords" content="HaxorAI, HTML Editor, Code Editor, Firebase, Web Development, Online Editor, File Management, Coding, Hacking" />
+<meta name="author" content="HaxorAI" />
+<!-- Favicon -->
+<link rel="shortcut icon" href="https://web.haxorai.com/img/favicon.svg" type="image/svg+xml">
+<!-- Open Graph / Social Media -->
+<meta property="og:title" content="HaxorAI HTML Editor" />
+<meta property="og:description" content="Edit dan update file HTML langsung di browser dengan HaxorAI Editor. Aman dan mudah digunakan." />
+<meta property="og:image" content="https://web.haxorai.com/img/haxorai.png" />
+<meta property="og:url" content="https://web.haxorai.com/console/edit.html" />
+<meta property="og:type" content="website" />
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="HaxorAI HTML Editor" />
+<meta name="twitter:description" content="Edit dan update file HTML langsung di browser dengan HaxorAI Editor." />
+<meta name="twitter:image" content="https://web.haxorai.com/img/haxorai.png" />
+<link rel="stylesheet" href="css/edit.css">
+<!-- CSS & JS utama CodeMirror -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/theme/material-darker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/codemirror.min.js"></script>
+
+<!-- Mode pendukung HTML -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+</head>
+<body>
+<div class="terminal-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+        </div>
+<h2>Edit File HTML</h2>
+<div id="info">Please upload the file <strong>with the same name</strong> to edit: <span id="filenameDisplay"></span></div>
+
+<!-- Input file -->
+<input type="file" id="fileInput" accept=".html" />
+
+<!-- Tombol aksi tepat di bawah Choose File -->
+<div style="margin-top:10px; margin-bottom:10px;">
+  <button id="save-btn" disabled>Save</button>
+  <button id="cancel-btn">Cancel</button>
+</div>
+
+<!-- Tab awalnya disembunyikan -->
+<div class="tab-container" id="tabContainer" style="display:none;">
+  <button class="tab-btn active" id="tab-edit">Edit</button>
+  <button class="tab-btn" id="tab-preview">Preview</button>
+</div>
+
+<!-- Time Programming -->
+<div id="hacker-clock"></div>
+
+<!-- Editor awalnya disembunyikan -->
+<div id="editorContainer" class="fade-container active" style="display:none;">
+  <textarea id="editor" spellcheck="false"></textarea>
+</div>
+
+<!-- Preview awalnya disembunyikan -->
+<div id="previewContainer" class="fade-container hidden" style="display:none;">
+  <iframe id="previewFrame" style="width:100%; height:calc(100vh - 260px); border:1px solid #333; border-radius:6px; background:#fff;"></iframe>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-content">
+    &copy; <span id="year"></span> 
+    <a href="https://web.haxorai.com" target="_blank" rel="noopener noreferrer" class="footer-link">web.haxorai.com</a> - All Rights Reserved
+  </div>
+</footer>
+<script>
+  // Set current year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Fungsi untuk update jam & tanggal
+  function updateHackerClock() {
+    const now = new Date();
+    const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    
+    const dayName = days[now.getDay()];
+    const day = String(now.getDate()).padStart(2, '0');
+    const monthName = months[now.getMonth()];
+    const year = now.getFullYear();
+    
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    document.getElementById('hacker-clock').textContent = 
+      `${dayName}, ${day} ${monthName} ${year} | ${hours}:${minutes}:${seconds}`;
+  }
+
+  // Update setiap detik
+  setInterval(updateHackerClock, 1000);
+  updateHackerClock();
+</script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database-compat.js"></script>
+<script src="js/edit-demo.js"></script>
+</body>
+</html>

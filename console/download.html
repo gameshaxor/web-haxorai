@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- SEO -->
+  <title>Download File</title>
+  <meta name="description" content="Unduh file HTML yang telah Anda upload melalui HaxorAI Terminal Console. Aman, cepat, dan langsung dari browser." />
+  <meta name="keywords" content="HaxorAI, Download HTML, Web Downloader, Terminal Console, File Storage, Firebase, Online File Manager" />
+  <meta name="author" content="HaxorAI" />
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="https://web.haxorai.com/img/favicon.svg" type="image/svg+xml">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:title" content="Download File HTML | HaxorAI Downloader" />
+  <meta property="og:description" content="Unduh file HTML yang Anda upload langsung dari browser melalui HaxorAI Terminal Console." />
+  <meta property="og:image" content="https://web.haxorai.com/img/haxorai.png" />
+  <meta property="og:url" content="https://web.haxorai.com/console/download.html" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Download File HTML | HaxorAI Downloader" />
+  <meta name="twitter:description" content="Unduh file HTML yang Anda upload langsung dari browser melalui HaxorAI Terminal Console." />
+  <meta name="twitter:image" content="https://web.haxorai.com/img/haxorai.png" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/download.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+</head>
+
+<body>
+  <div class="haxorai-logos">
+      <img src="https://web.haxorai.com/img/favicon.svg" alt="Firebase" class="logo-img" />
+      <h1>Downloader HTML</h1>
+    </div>
+  <div class="file-info">
+    <div id="file-name">Last Uploaded: ...</div>
+    <div id="file-size">Size: ...</div>
+    <div>Action: 
+<button id="view-btn" class="btn-secondary">
+  <i class="icon demo"></i> Demo
+</button>
+<button id="view-raw-btn" class="btn-secondary">
+  <i class="icon raw"></i> Code
+</button>
+</div>
+
+    <hr />
+    <button id="download-btn" disabled>Loading...</button>
+  </div>
+
+<!-- Elemen tanggal & waktu -->
+<div id="hacker-clock"></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-content">
+    &copy; <span id="year"></span> 
+    <a href="https://www.haxorai.com" target="_blank" rel="noopener noreferrer" class="footer-link">HaxorAI</a> - All Rights Reserved
+  </div>
+</footer>
+
+<script>
+  // Set current year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Fungsi untuk update jam & tanggal
+  function updateHackerClock() {
+    const now = new Date();
+    const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    
+    const dayName = days[now.getDay()];
+    const day = String(now.getDate()).padStart(2, '0');
+    const monthName = months[now.getMonth()];
+    const year = now.getFullYear();
+    
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    document.getElementById('hacker-clock').textContent = 
+      `${dayName}, ${day} ${monthName} ${year} | ${hours}:${minutes}:${seconds}`;
+  }
+
+  // Update setiap detik
+  setInterval(updateHackerClock, 1000);
+  updateHackerClock();
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+<!-- Di balik layar hitam, aku menari dengan bayangan, mengurai misteri semesta digital. Kode adalah puisiku, dan setiap celah adalah cerita yang belum terungkap. -->
+<script src="js/download.js"></script>
+</body>
+</html>
