@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
+
+body {
+  font-family: 'Fira Code', monospace;
+  background: #031525; /* nuansa gelap ala Google Cloud terminal */
+  color: #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin: 0;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 1.9em;
+  color: #ccc;
+  position: relative;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 1px;
+  animation: fadeInSlide 1s ease-out;
+}
+
+.file-info {
+  text-align: left;
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 480px;
+  margin-bottom: 20px;
+  border: 2px solid #2b3545;
+}
+
+#download-btn {
+  width: 100%;
+}
+
+button {
+  background: #007bff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border-radius: 8px;
+  color: #fff;
+  margin: 5px 8px 5px 0;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: linear-gradient(145deg, #1f2533, #151a24);
+  color: #00ffcc;
+  border: 1px solid #2b3545;
+  box-shadow: none;
+  display: inline-flex;       /* Biar icon + text sejajar */
+  align-items: center;        /* Vertikal center */
+  gap: 6px;                   /* Jarak icon dengan teks */
+  padding: 6px 12px;          /* Ruang dalam */
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #222a3a;
+  border-color: #00ffcc;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #2b3545;
+  margin: 15px 0;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  flex-shrink: 0; /* Biar tidak mengecil */
+}
+
+.demo {
+  background-image: url("data:image/svg+xml,%3Csvg%20width%3D%2219%22%20height%3D%2219%22%20fill%3D%22none%22%20stroke%3D%22%2300ffcc%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%222%22%20viewBox%3D%220%200%2024%2024%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M18%2013v6a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2V8a2%202%200%200%201%202-2h6%22/%3E%3Cpath%20d%3D%22M15%203h6v6%22/%3E%3Cpath%20d%3D%22M10%2014%2021%203%22/%3E%3C/svg%3E");
+}
+
+.raw {
+  background-image: url("data:image/svg+xml,%3Csvg%20width%3D%2219%22%20height%3D%2219%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22%2300ffcc%22%20d%3D%22M10.478%201.647a.5.5%200%201%200-.956-.294l-4%2013a.5.5%200%200%200%20.956.294l4-13zM4.854%204.146a.5.5%200%200%201%200%20.708L1.707%208l3.147%203.146a.5.5%200%200%201-.708.708l-3.5-3.5a.5.5%200%200%201%200-.708l3.5-3.5a.5.5%200%200%201%20.708%200zm6.292%200a.5.5%200%200%200%200%20.708L14.293%208l-3.147%203.146a.5.5%200%200%200%20.708.708l3.5-3.5a.5.5%200%200%200%200-.708l-3.5-3.5a.5.5%200%200%200-.708%200z%22/%3E%3C/svg%3E");
+}
+
+.loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.loading div {
+  width: 12px;
+  height: 12px;
+  margin: 0 2px;
+  border-radius: 50%;
+  animation: 0.8s ease-in-out infinite loading;
+  background-color: whitesmoke;
+}
+.loading div:nth-child(2) { animation-delay: 0.2s; }
+.loading div:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes loading {
+  0%, 100%, 80% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+/* Responsif */
+@media (max-width: 600px) {
+  body {
+    padding: 15px;
+  }
+  .file-info {
+    padding: 15px;
+  }
+  button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .btn-secondary {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+/* Logos area - posisi di tengah horizontal */
+.haxorai-logos {
+  display: flex;
+  gap: 12px;
+  justify-content: center;  /* CENTER LOGOS HORIZONTAL */
+  align-items: center;
+  margin-bottom: 6px;
+  width: 100%;
+}
+
+/* Ukuran logo */
+.logo-img {
+  height: 32px;
+}
+
+.logo-img-large {
+  height: 32px;
+  filter: brightness(0) invert(1);
+}
+
+/* Footer styling */
+.footer {
+  background-color: #09080c;
+  color: #888;              /* abu-abu soft */
+  font-family: "Ubuntu Mono", monospace;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  user-select: none;
+  box-shadow: inset 0 1px 0 #333;
+  z-index: 100;
+}
+
+.footer a.footer-link {
+  color: #4ee44e; /* warna hijau khas prompt */
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.footer a.footer-link:hover {
+  color: #37b137;
+  text-decoration: underline;
+}
+
+.footer-content {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+#hacker-clock {
+    color: #888;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin: 30px;
+  }
