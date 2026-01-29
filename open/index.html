@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- SEO -->
+  <title>Open File</title>
+  <meta name="description" content="Lihat dan bagikan file secara online di Web HaxorAI. Halaman ini menampilkan file publik yang dapat diakses langsung dari browser tanpa perlu diunduh terlebih dahulu.">
+  <meta name="keywords" content="open file, file viewer, view html online, haxor ai, web haxor, file sharing, file online, public files">
+  <meta name="author" content="Web Haxor AI">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#000000">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Open File | Web HaxorAI">
+  <meta property="og:description" content="Lihat dan bagikan file publik secara online di Web HaxorAI.">
+  <meta property="og:url" content="https://web.haxorai.com/open/">
+  <meta property="og:image" content="https://web.haxorai.com/img/haxorai.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Open File | Web Haxor AI">
+  <meta name="twitter:description" content="Lihat dan bagikan file publik secara online di Web HaxorAI.">
+  <meta name="twitter:image" content="https://web.haxorai.com/img/haxorai.png">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Web Haxor AI - Open File",
+    "url": "https://web.haxorai.com/open/",
+    "description": "Lihat dan bagikan file publik secara online di Web Haxor AI.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "creator": {
+      "@type": "Organization",
+      "name": "Web Haxor AI",
+      "url": "https://web.haxorai.com"
+    }
+  }
+  </script>
+
+  <!-- Fonts & Styles -->
+  <link href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" defer></script>
+</head>
+<body>
+
+<div id="header">
+  <span id="fileInfo">Loading...</span>
+  <div id="btnGroup">
+    <button id="btnOpenNew" title="Open in New Tab"><i class="open"></i> Open</button>
+    <button id="btnCopyLink" title="Copy Link"><i class="copy"></i> Copy</button>
+    <button id="btnBack" title="Back to List"><i class="home"></i> Back</button>
+  </div>
+  <button id="mobileMenuBtn" title="Menu"><i class="menu"></i></button>
+  <button id="btnCloseHeader" title="Hide Header"><i class="close"></i></button>
+  <div id="mobileMenu" role="menu" aria-hidden="true">
+    <button id="mBtnOpenNew" role="menuitem"><i class="open"></i> Open</button>
+    <button id="mBtnCopyLink" role="menuitem"><i class="copy"></i> Copy</button>
+    <button id="mBtnBack" role="menuitem"><i class="home"></i> Back</button>
+  </div>
+</div>
+
+<button id="btnShowHeader" title="Show Header" aria-label="Show Header"><i class="info"></i></button>
+
+<div id="loading" class="loader" aria-label="Loading animation" role="alert" aria-live="assertive">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+
+<iframe id="fileFrame" title="File Viewer"></iframe>
+<div id="errorMsg"></div>
+
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database-compat.js"></script>
+<!-- Di balik layar hitam, aku menari dengan bayangan, mengurai misteri semesta digital. Kode adalah puisiku, dan setiap celah adalah cerita yang belum terungkap. -->
+<script src="https://web.haxorai.com/open/js/script.js" defer></script>
+
+</body>
+</html>
