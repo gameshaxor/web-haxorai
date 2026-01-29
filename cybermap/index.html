@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Samuel Pasaribu" />
+  <meta content='width=1024' name='viewport'/>
+  <meta name="description" content="Explore real-time cyber attack maps showcasing global threats, vulnerabilities, and cybersecurity incidents. Dive into an interactive experience designed for professionals, enthusiasts, and cybersecurity experts seeking to understand modern cyber threats and defense strategies." />
+  <meta name="keywords" content="cyber attack map, real-time cyber threats, cybersecurity map, global cyber attacks, threat intelligence, cyber defense, online security, cybersecurity insights, hacking map, professional hacker tools" />
+  <meta name="robots" content="index, follow" />
+  <meta name="revisit-after" content="7 days" />
+  <meta name="language" content="en" />
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Cyber Attack Map - Real-Time Threats and Global Insights" />
+  <meta property="og:description" content="Discover real-time cyber threats, global vulnerabilities, and explore cyber intelligence insights. A must-visit for cybersecurity professionals and enthusiasts." />
+  <meta property="og:image" content="https://web.haxorai.com/cybermap/img/haxorai.png" />
+  <meta property="og:url" content="https://web.haxorai.com" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="en_US" />
+  
+  <title>MAP | HaxorAI Cyberthreat live map</title>
+  <link rel="shortcut icon" href="https://web.haxorai.com/img/favicon.svg">
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/dark-hive/jquery-ui.css'>
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css'>
+  <link rel="stylesheet" href="css/style.css">  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body translate="no">
+  <head>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    #time-log {
+      position: absolute;
+      font-size: 12px;
+      font-family: sans-serif;
+      padding: 5px;
+      border-radius: 3px;
+      background-color: rgba(200, 200, 200, 0.1);
+      color: lavender;
+      bottom: 10px;
+      right: 10px;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="bombs">
+    <div class="score" id="US"></div>
+    <div class="score" id="CP"></div>
+    <div class="score" id="GB"></div>
+    <div class="score" id="FR"></div>
+
+    <div id="time"></div>
+    <canvas id="stage" width="500" height="250"></canvas>
+
+    <div class="score" id="IN"></div>
+    <div class="score" id="PC"></div>
+    <div class="score" id="IS"></div>
+    <div id="total" data-score="0"></div>
+  </div>
+
+  <div class="tabHeader">
+    <div class="titleText" onClick="maxBtnFunc()">Cyber Security Attack Map Suite</div>
+    <div class="closeBtn">
+      <img type='button' id="closeBtn7" height="18px" width="18px" onClick="closeBtnFnc7()" src="https://assets.codepen.io/6611087/closeBtn.svg">
+
+    </div>
+    <div class="maxBtn">
+      <svg type='button' id="maxBtn7" onClick="maxBtnFnc7()" src="https://assets.codepen.io/6611087/maxBtn.svg"></svg>
+    </div>
+    <div class="minBtn">
+      <svg type='button' id=" minBtn7" onClick="minBtnFnc7()" src="https://assets.codepen.io/6611087/minBtn.svg"></svg>
+    </div>
+    <div class="favicon"><img width="20px" height="20px" src="../img/topeng.svg"></img></div>
+    <div class="favicon"> <img width="40px" height="40px" src="../img/topeng.svg"></img></div>
+  </div>
+
+  <div class="taskbar">
+    <div class="signatureText"><i>by</i>
+      <a style="color:#d3e3fd;" href="https://www.samuelpasaribu.com" class="signature" target="_blank" rel="noopener noreferrer">samuelpasaribu.com</a>
+    </div>  
+    <div class="signatureIconsContainer">
+      <div class="signatureIcon"></div>
+      <div type="button" class="resumeIcon" onClick="exeBtnFnc9()">
+        <div class="resumeIconText">Explore</div><svg onClick="exeBtnFnc9()" type=button xmlns="https://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-briefcase" viewBox="0 0 16 16">
+          <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5zm1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0zM1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5z" />
+        </svg>
+      </div>
+      <a href="https://web.haxorai.com">
+      <div type="button" class="projectsIcon">
+        <img src="https://assets.codepen.io/6611087/codepenIcon-white.svg" width="25px" />
+        </a>
+        <div class="projectsIconText">Projects</div>
+
+      </div>
+    </div>
+    <div class="taskbarTime">00:00 PM </div>
+  </div>
+  <div class="attackMap-widget" id="attackMap-table">
+    <div class="widget-top">
+
+      <div class="widget-top-text">Live Attack Data</div>
+      <div class="attackMap-widget-body">
+        <attackMap-table-row-top>
+          <attackMap-table-cell0>
+            <div id="ipdata0"></div>
+          </attackMap-table-cell0>
+          <attackMap-table-cell1>
+            <div id="attacker0"></div>
+          </attackMap-table-cell1>
+          <attackMap-table-cell2>
+            <div id="flag0"></div>
+          </attackMap-table-cell2>
+          <attackMap-table-cell3></attackMap-table-cell3>
+          <attackMap-table-cell4></attackMap-table-cell4>
+          <attackMap-table-cell5></attackMap-table-cell5>
+        </attackMap-table-row-top>
+        <attackMap-table-row1>
+          <attackMap-table-cell0>
+            <div id="ipdata1"></div>
+          </attackMap-table-cell0>
+          <attackMap-table-cell1>
+            <div id="attacker1"></div>
+          </attackMap-table-cell1>
+          <attackMap-table-cell2>
+            <div id="flag1"></div>
+          </attackMap-table-cell2>
+          <attackMap-table-cell3></attackMap-table-cell3>
+          <attackMap-table-cell4></attackMap-table-cell4>
+          <attackMap-table-cell5></attackMap-table-cell5>
+        </attackMap-table-row1>
+        <attackMap-table-row2>
+          <attackMap-table-cell0>
+            <div id="ipdata2"></div>
+          </attackMap-table-cell0>
+          <attackMap-table-cell1>
+            <div id="attacker2"></div>
+          </attackMap-table-cell1>
+          <attackMap-table-cell2>
+            <div id="flag2"></div>
+          </attackMap-table-cell2>
+          <attackMap-table-cell3></attackMap-table-cell3>
+          <attackMap-table-cell4></attackMap-table-cell4>
+          <attackMap-table-cell5></attackMap-table-cell5>
+        </attackMap-table-row2>
+        <attackMap-table-row-bottom>
+          <attackMap-table-cell0>
+            <div id="ipdata2"></div>
+          </attackMap-table-cell0>
+          <attackMap-table-cell1>
+            <div id="attacker2"></div>
+          </attackMap-table-cell1>
+          <attackMap-table-cell2></attackMap-table-cell2>
+          <attackMap-table-cell3></attackMap-table-cell3>
+          <attackMap-table-cell4></attackMap-table-cell4>
+          <attackMap-table-cell5></attackMap-table-cell5>
+        </attackMap-table-row-bottom>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="attackMap-widget" id="attackMap-map">
+    <div class="widget-top">
+      <div class="move-icon" id="move-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-move" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10zM.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708l-2-2zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8z" />
+        </svg></div>
+      <div class="widget-top-text">Global Map</div>
+    </div>
+    <div id="globeViz"></div>
+  </div>
+
+  </div>
+  <div class="attackMap-widget" id="attackMap-worldView">
+    <div class="widget-top">
+      <div class="move-icon" id="move-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-move" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10zM.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708l-2-2zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8z" />
+        </svg></div>
+      <div class="widget-top-text">World Statistics</div>
+
+    </div>
+
+  </div>
+  <div class="attackMap-widget" id="attackMap-legend">
+    <div class="widget-top">
+      <div class="move-icon" id="move-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-move" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10zM.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708l-2-2zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8z" />
+        </svg></div>
+      <div class="widget-top-text">Legend</div>
+
+    </div>
+    <worldView>
+      <canvas id="worldView"></canvas>
+    </worldView>
+
+  </div>
+  <div class="attackMap-widget" id="attackMap-news">
+    <div class="widget-top">
+      <div class="move-icon" id="move-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-move" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10zM.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708l-2-2zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8z" />
+        </svg></div>
+      <div class="widget-top-text">News</div>
+
+    </div>
+
+  </div>
+  <div class="attackMap-widget" id="attackMap-userTeam-card">
+    <div class="widget-top">
+
+      <div class="widget-top-text">Team LoneCipher</div>
+
+    </div>
+    <div class="profileContainer">
+
+    </div>
+    <div class="profileAvatar-box"> </div>
+    <div class="profileAvatar-box-bg"> </div>
+
+    <div class="profileAvatar"> </div>
+    <div class="userName-box">Anonymous</div>
+    <div class="userName"></div>
+
+  </div>
+
+  <div id="windowTab9" class="windowTab9" draggable="true">
+    <div class="tabHeader9" id="tabHeader9">
+      <div class="titleText9" onClick="maxBtnFunc9()">Samuel Wright's Explore</div>
+      <div class="closeBtn9">
+        <img type='button' id="closeBtn9" onClick="closeBtnFnc9()" src="https://assets.codepen.io/6611087/closeBtn.svg">
+
+      </div>
+      <div class="maxBtn9">
+        <svg type='button' id="maxBtn9" onClick="maxBtnFnc9()" src="https://assets.codepen.io/6611087/maxBtn.svg"></svg>
+      </div>
+      <div class="minBtn9">
+        <svg type='button' id=" minBtn9" onClick="minBtnFnc9()" src="https://assets.codepen.io/6611087/minBtn.svg"></svg>
+      </div>
+      <div class="favicon9"><img width="22px" height="22px" src="	https://web.haxorai.com/img/default-profile.png"></img>
+      </div>
+    </div>
+    <div class="tabBody9">
+      <div class="responsive-wrapper">
+        <iframe src="map.html" width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
+        <div style="margin-bottom:5px"> <strong> <a href="//www.haxorai.com" title="Samuel Wright Explore-12mar2022" target="_blank">HaxorAI Wright Explore-12mar2022</a> </strong> from <strong><a href="//www.samuelpasaribu.com" target="_blank">samuelpasaribu.com</a></strong> </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+<!-- Di balik layar hitam, aku menari dengan bayangan, mengurai misteri semesta digital. Kode adalah puisiku, dan setiap celah adalah cerita yang belum terungkap. -->
+<script src='https://code.jquery.com/jquery-3.6.0.js'></script>
+<script src='https://code.jquery.com/ui/1.13.1/jquery-ui.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js'></script>
+<script type="module" src='https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js'></script>
+<script src='https://d3js.org/d3.v3.min.js'></script>
+<script src='https://unpkg.com/globe.gl'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.0.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.0.0/umd/react-dom.production.min.js"></script>
+<script src='https://d3js.org/topojson.v0.min.js'></script>
+<script id="rendered-js" src="js/script.js" ></script>
+
+</body>
+
+</html>
