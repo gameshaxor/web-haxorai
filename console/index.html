@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
+  <!-- SEO -->
+  <title>HaxorAI Terminal Console</title>
+  <meta name="description" content="HaxorAI Terminal Console: jalankan perintah, kelola file, dan edit HTML secara langsung di browser dengan sistem Firebase. Cocok untuk belajar coding dan hacking secara aman." />
+  <meta name="keywords" content="HaxorAI, Terminal Console, Firebase, Web Terminal, Online Editor, File Manager, HTML Editor, Coding, Hacking" />
+  <meta name="author" content="LoneCipher / HaxorAI" />
+  
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="https://web.haxorai.com/img/favicon.svg" type="image/svg+xml">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:title" content="HaxorAI Terminal Console" />
+  <meta property="og:description" content="Kelola file, jalankan perintah, dan edit HTML di browser dengan HaxorAI Terminal Console." />
+  <meta property="og:image" content="https://web.haxorai.com/img/haxorai.png" />
+  <meta property="og:url" content="https://web.haxorai.com/console/" />
+  <meta property="og:type" content="website" />
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="HaxorAI Terminal Console" />
+  <meta name="twitter:description" content="Kelola file, jalankan perintah, dan edit HTML di browser dengan HaxorAI Terminal Console." />
+  <meta name="twitter:image" content="https://web.haxorai.com/img/haxorai.png" />
+  
+  <!-- Theme / Style -->
+  <link rel="stylesheet" href="css/style.css" />
+  
+  <!-- Fallback Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+</head>
+<body>
+
+<!-- Login Terminal: web.haxorai.com -->
+<div id="login-simulator" class="infologin"></div>
+
+<!-- Fungsi Perintah Terminal -->
+<div id="console-container" style="display:none; flex-direction: column; height: 100vh;">
+  <div id="terminal"></div>
+<div id="input-line">
+  <span id="input-prompt">haxorai$</span>&nbsp;
+  <input id="command-input" autocomplete="off" autofocus placeholder="Ask anything" />
+  <button id="send-command" title="Kirim perintah">&#10148; Kirim</button>
+</div>
+</div>
+
+<!-- Menu Tema -->
+<div id="theme-menu">
+  <label for="theme-select">Tema:</label>
+  <select id="theme-select">
+    <option value="default">Default</option>
+    <option value="lonecipher">Lonecipher</option>
+    <option value="haxorai">Haxorai</option>
+    <option value="skull">Skull</option>
+  </select>
+</div>
+
+<!-- Hidden file input untuk replace -->
+<input type="file" id="file-input" accept=".html" style="display:none;">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database-compat.js"></script>
+
+<!-- Fungsi Perintah Terminal -->
+<script src="js/script.js"></script>
+</body>
+</html>
