@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover random HTML files uploaded by users on HaxorAI Explorer. Browse and explore diverse HTML projects with ease." />
+    <meta name="keywords" content="HaxorAI, random file explorer, browse HTML files, file sharing, explore HTML projects, upload HTML files, web development files, user uploaded files, file search" />
+    <meta name="author" content="Samuel Pasaribu" />
+    <meta name="robots" content="index, follow" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="language" content="en" />
+    <meta name="og:title" content="HaxorAI Explorer - Explore Random HTML Files" />
+    <meta name="og:description" content="Browse random HTML files uploaded by users, explore different projects, and discover creative HTML web pages on HaxorAI Explorer." />
+    <meta name="og:image" content="https://web.haxorai.com/img/haxorai.png" />
+    <meta name="og:url" content="https://web.haxorai.com/explorer" />
+    <meta name="og:type" content="website" />
+    <meta name="og:locale" content="en_US" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="HaxorAI Explorer - Explore Random HTML Files" />
+    <meta name="twitter:description" content="Browse random HTML files uploaded by users, explore different projects, and discover creative HTML web pages on HaxorAI Explorer." />
+    <meta name="twitter:image" content="https://web.haxorai.com/img/image.png" />
+    <title>HaxorAI Explorer</title>
+    <link rel="shortcut icon" href="https://web.haxorai.com/img/favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" defer></script>
+    <link rel="preload" href="../img/anonymous.jpg" as="image" type="image/gif">
+</head>
+
+<body>
+    <header class="site-header">
+        <!-- Username di kiri -->
+        <div class="auth-left">
+            <img id="userPhoto" src="../img/user.png" class="user-photo">
+            <span id="userNameEmail">Anonymous</span>
+        </div>
+
+        <!-- Tombol Login / Logout di kanan -->
+        <div class="auth-right">
+            <div id="loginForm">
+                <button id="loginButton" class="btn-login">Login</button>
+            </div>
+
+            <div id="userInfo" class="hidden">
+                <button id="logoutButton" class="btn-logout">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Floating notification -->
+    <div id="toast" class="viewer"></div>
+
+    <div class="error-image"></div>
+    <div class="battle-layer" id="battleLayer" style="display:none;">
+        <img src="img/roh-kudus.png" class="rohkudus" id="rohKudus">
+        <img src="../img/firebase.png" class="lucifer" id="lucifer">
+    </div>
+    <div class="main-content">
+        <!-- Gambar Salib -->
+        <div class="salib-profile">
+            <img src="../img/anonymous.jpg" alt="Salib">
+        </div>
+        <h1>Get Random File</h1>
+        <p class="info"><span id="total-files" class="uploader">Uploader: 0</span></p>
+        <p class="info">
+            <strong>[ SYSTEM NOTICE ]</strong> Uplink established...<br>
+            Query node: <em>Uploader Network</em><br>
+            Action required → Press <code>SEARCH</code> to intercept deployed HTML payloads from active operatives.
+        </p>
+
+        <!-- Random File Button -->
+        <button id="randomFileButton" class="btn-start back-btn" aria-label="Get Random File">SEARCH</button>
+
+        <!-- Loader -->
+        <div id="loader" class="loader" style="display: none;">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <!-- Notification Popup -->
+    <div id="notification">
+        <div class="popup">
+            <h2>Hacked By</h2>
+            <div class="file-info">
+                <div class="user-profile">
+                    <img src="https://web.haxorai.com/img/anonymous.jpg" class="samuellovekeyla profile-img" alt="User Profile">
+                    <p id="user-name">Anonymous_Haxor</p>
+                    <p id="user-file-count">Total Files by User: 0</p>
+                </div>
+                <p class="info-link" id="file-name">Name: sample.html</p>
+                <p id="file-size">Size: 250 KB</p>
+                <p id="file-views">Views: 135</p>
+                <p id="file-created">Created: 2024-07-12 13:45</p>
+                <div class="buttons">
+                    <a href="javascript:;" class="open-link" id="file-link" target="_blank">
+                        <span class="btn-open openfile">Open File</span>
+                    </a>
+                    <button onclick="closeNotification()" class="btn-close">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-storage-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-auth-compat.js" defer></script>
+    <!-- Di balik layar hitam, aku menari dengan bayangan, mengurai misteri semesta digital. Kode adalah puisiku, dan setiap celah adalah cerita yang belum terungkap. -->
+    <script src="js/explorer-04092025.js" defer></script>
+    <script src="js/login.js" defer></script>
+
+</body>
+
+</html>
