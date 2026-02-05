@@ -13,6 +13,7 @@ gtag('config', 'G-PBGR4TXJ2W');
 // Pilih elemen SVG menggunakan querySelector
 const svgIcon=document.querySelector("svg");svgIcon.setAttribute("role","img");svgIcon.setAttribute("aria-label","Icon Description");
 // PushChat Web & App
-document.getElementById("whatsapp").addEventListener("click",function(){window.location.href="https://bit.ly/2NOIFtY"});document.getElementById("login").addEventListener("click",function(){window.location.href="https://www.samuelpasaribu.com"});
+document.getElementById("whatsapp").addEventListener("click",function(){window.location.href="https://bit.ly/2NOIFtY"});document.getElementById("login").addEventListener("click",function(){window.location.href="https://samuel.haxorai.com"});
 // Layanan Keamanan & Pengembangan Web
+
 function toggleSimpleMenu(){var menuContainer=document.getElementById("menuContainerUnique");var menu=document.getElementById("menuUnique");if(menuContainer.style.display==="grid"){menuContainer.style.display="none";menu.classList.remove("open_menu")}else{menuContainer.style.display="grid";menu.classList.add("open_menu")}}
