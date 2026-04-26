@@ -1,2 +1,2 @@
-/view/*  /view.html  200
-/raw/*   /raw.html   200
+/view/* → /view.html
+/raw/*  → /raw.html
