@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HaxorAI Code Viewer</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<style>
+body {
+  margin: 0;
+  background: #0d1117;
+  color: #c9d1d9;
+  font-family: "Fira Code", monospace;
+}
+
+/* HEADER */
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+}
+
+.filename {
+  color: #58a6ff;
+  font-size: 14px;
+}
+
+/* ACTIONS */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  background: #21262d;
+  border: 1px solid #30363d;
+  color: #c9d1d9;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.actions button:hover {
+  background: #30363d;
+  cursor: pointer;
+}
+
+/* CODE AREA */
+.code-container {
+  display: flex;
+}
+
+/* LINE NUMBERS */
+.lines {
+  background: #161b22;
+  padding: 15px 10px;
+  text-align: right;
+  color: #6e7681;
+  user-select: none;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* CODE */
+pre {
+  margin: 0;
+  padding: 15px;
+  overflow: auto;
+  flex: 1;
+}
+
+code {
+  font-size: 13px;
+  line-height: 1.5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div class="filename" id="fileName">Loading...</div>
+
+  <div class="actions">
+    <button onclick="copyCode()">Copy</button>
+    <button onclick="downloadFile()">Download</button>
+  </div>
+</div>
+
+<div class="code-container">
+  <div class="lines" id="lines"></div>
+  <pre><code id="code">Loading...</code></pre>
+</div>
+
+<script>
+const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
+const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
+
+const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+let rawText = "";
+let fileNameGlobal = "";
+
+/* =========================
+   SLUG FROM URL (NEW SYSTEM)
+========================= */
+function getSlug() {
+  const path = window.location.pathname;
+  return path.split("/").pop().replace(".html", "");
+}
+
+/* COPY */
+function copyCode() {
+  navigator.clipboard.writeText(rawText);
+  alert("Copied!");
+}
+
+/* DOWNLOAD */
+function downloadFile() {
+  const blob = new Blob([rawText], { type: "text/html" });
+  const a = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+
+  a.href = url;
+  a.download = fileNameGlobal || "file.html";
+  a.click();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* LINE NUMBERS */
+function generateLines(text) {
+  const count = text.split("\n").length;
+
+  let html = "";
+  for (let i = 1; i <= count; i++) {
+    html += `<div>${i}</div>`;
+  }
+
+  document.getElementById("lines").innerHTML = html;
+}
+
+/* =========================
+   LOAD RAW (SLUG VERSION)
+========================= */
+async function loadRaw() {
+  const slug = getSlug();
+
+  if (!slug) {
+    document.body.innerHTML = "Invalid slug";
+    return;
+  }
+
+  const { data, error } = await sb
+    .from("files")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) {
+    document.body.innerHTML = "File not found";
+    return;
+  }
+
+  fileNameGlobal = data.name;
+  document.getElementById("fileName").textContent = data.name;
+
+  try {
+    const res = await fetch(data.url);
+    rawText = await res.text();
+  } catch {
+    document.body.innerHTML = "Failed to load file";
+    return;
+  }
+
+  const codeEl = document.getElementById("code");
+
+  generateLines(rawText);
+
+  hljs.configure({ ignoreUnescapedHTML: true });
+
+  const result = hljs.highlightAuto(rawText);
+  codeEl.innerHTML = result.value;
+}
+
+window.addEventListener("DOMContentLoaded", loadRaw);
+</script>
+
+</body>
+</html>
