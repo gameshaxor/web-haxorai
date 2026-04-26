@@ -77,11 +77,11 @@ async function loadFile() {
   }
 
   const { data, error } = await sb
-    .from("files")
-    .select("*")
-    .eq("slug", slug.toLowerCase())
-    .maybeSingle();
-
+  .from("files")
+  .select("*")
+  .ilike("slug", slug)
+  .maybeSingle();
+  
   if (error || !data) {
     document.body.innerHTML = `
       <h2>File not found</h2>
