@@ -1,2 +1,2 @@
-/view.html?slug=composer
-/raw.html?slug=composer
+/view/*  /view.html  200
+/raw/*   /raw.html   200
