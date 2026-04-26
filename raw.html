@@ -69,6 +69,7 @@ body {
   user-select: none;
   font-size: 13px;
   line-height: 1.5;
+  font-family: "Fira Code", monospace;
 }
 
 /* CODE */
@@ -111,12 +112,10 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 let rawText = "";
 let fileNameGlobal = "";
 
-/* =========================
-   SLUG FROM URL (NEW SYSTEM)
-========================= */
-function getSlug() {
-  const path = window.location.pathname;
-  return path.split("/").pop().replace(".html", "");
+/* GET ID */
+function getId() {
+  const parts = window.location.pathname.split("/");
+  return parts[parts.length - 1];
 }
 
 /* COPY */
@@ -130,7 +129,6 @@ function downloadFile() {
   const blob = new Blob([rawText], { type: "text/html" });
   const a = document.createElement("a");
   const url = URL.createObjectURL(blob);
-
   a.href = url;
   a.download = fileNameGlobal || "file.html";
   a.click();
@@ -150,21 +148,19 @@ function generateLines(text) {
   document.getElementById("lines").innerHTML = html;
 }
 
-/* =========================
-   LOAD RAW (SLUG VERSION)
-========================= */
+/* LOAD RAW */
 async function loadRaw() {
-  const slug = getSlug();
+  const id = getId();
 
-  if (!slug) {
-    document.body.innerHTML = "Invalid slug";
+  if (!id) {
+    document.body.innerHTML = "Invalid ID";
     return;
   }
 
   const { data, error } = await sb
     .from("files")
     .select("*")
-    .eq("slug", slug)
+    .eq("id", id)
     .single();
 
   if (error || !data) {
@@ -176,19 +172,21 @@ async function loadRaw() {
   document.getElementById("fileName").textContent = data.name;
 
   try {
-    const res = await fetch(data.url);
-    rawText = await res.text();
+  const res = await fetch(data.url);
+  rawText = await res.text();
   } catch {
-    document.body.innerHTML = "Failed to load file";
-    return;
+  document.body.innerHTML = "Failed to load file";
+  return;
   }
 
   const codeEl = document.getElementById("code");
 
   generateLines(rawText);
 
+  // config dulu (hindari warning HTML)
   hljs.configure({ ignoreUnescapedHTML: true });
 
+  // 🔥 AUTO DETECT + HIGHLIGHT (SAFE)
   const result = hljs.highlightAuto(rawText);
   codeEl.innerHTML = result.value;
 }
