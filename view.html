@@ -28,6 +28,10 @@
       border: none;
       background: white;
     }
+
+    .badge {
+      color: #00ff9d;
+    }
   </style>
 </head>
 
@@ -47,20 +51,16 @@ const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   GET SLUG (FIX FINAL)
+   GET PARAM ID
 ========================= */
 function getSlug() {
-  const url = window.location.href;
+  const path = window.location.pathname;
 
-  // contoh:
-  // https://web.haxorai.com/view/3d-pyramid.html
-  const match = url.match(/\/view\/([^?#]+)/);
-
-  if (match && match[1]) {
-    return match[1];
+  if (path.includes("/view/")) {
+    return path.split("/view/")[1];
   }
 
-  // fallback localhost
+  // fallback localhost pakai ?slug=
   const params = new URLSearchParams(window.location.search);
   return params.get("slug");
 }
@@ -69,11 +69,7 @@ function getSlug() {
    ADD VIEW
 ========================= */
 async function addView(id) {
-  try {
-    await sb.rpc("increment_views", { row_id: id });
-  } catch (e) {
-    console.error("view error:", e);
-  }
+  await sb.rpc("increment_views", { row_id: id });
 }
 
 /* =========================
@@ -81,8 +77,6 @@ async function addView(id) {
 ========================= */
 async function loadFile() {
   const slug = getSlug();
-
-  console.log("SLUG:", slug); // debug
 
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
@@ -96,25 +90,19 @@ async function loadFile() {
     .single();
 
   if (error || !data) {
-    console.error(error);
     document.body.innerHTML = "<h2>File not found</h2>";
     return;
   }
 
-  // UI
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  // fetch html
-  try {
-    const res = await fetch(data.url);
-    const html = await res.text();
+  const iframe = document.getElementById("viewer");
 
-    document.getElementById("viewer").srcdoc = html;
-  } catch (e) {
-    console.error("fetch error:", e);
-    document.body.innerHTML = "<h2>Failed to load file</h2>";
-  }
+  const res = await fetch(data.url);
+  const html = await res.text();
+
+  iframe.srcdoc = html;
 
   addView(data.id);
 }
