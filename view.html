@@ -56,14 +56,17 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 function getSlug() {
   const path = window.location.pathname;
 
+  // contoh: /view/3d-pyramid.html
+  const parts = path.split("/").filter(Boolean);
+
+  // localhost fallback
   if (path.includes("view.html")) {
-    // fallback localhost
     const params = new URLSearchParams(window.location.search);
     return params.get("slug");
   }
 
-  const parts = path.split("/");
-  return parts[2];
+  // ambil bagian terakhir
+  return parts[1] || null;
 }
 /* =========================
    ADD VIEW
@@ -76,20 +79,18 @@ async function addView(id) {
    LOAD FILE
 ========================= */
 async function loadFile() {
-  const id = getId();
+  const slug = getSlug();
 
-  if (!id) {
-    document.body.innerHTML = "<h2>Invalid ID</h2>";
+  if (!slug) {
+    document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-const slug = getSlug();
-
-const { data, error } = await sb
-  .from("files")
-  .select("*")
-  .eq("slug", slug)
-  .single();
+  const { data, error } = await sb
+    .from("files")
+    .select("*")
+    .eq("slug", slug)
+    .single();
 
   if (error || !data) {
     document.body.innerHTML = "<h2>File not found</h2>";
@@ -100,14 +101,13 @@ const { data, error } = await sb
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  // tampilkan file ke iframe
+  // ambil HTML
   const iframe = document.getElementById("viewer");
 
-const res = await fetch(data.url);
-const html = await res.text();
+  const res = await fetch(data.url);
+  const html = await res.text();
 
-// inject ke iframe
-iframe.srcdoc = html;
+  iframe.srcdoc = html;
 
   // tambah view
   addView(data.id);
