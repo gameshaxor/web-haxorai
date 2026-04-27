@@ -55,10 +55,7 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 ========================= */
 function getSlug() {
   const path = window.location.pathname;
-  const parts = path.split("/");
-  const file = parts.pop();
-
-  return file.replace(".html", "");
+  return path.split("/view/")[1]?.replace(".html", "");
 }
 
 /* =========================
@@ -78,6 +75,8 @@ async function loadFile() {
     document.body.innerHTML = "<h2>Invalid ID</h2>";
     return;
   }
+
+  const slug = getSlug();
 
   const { data, error } = await sb
     .from("files")
