@@ -69,14 +69,12 @@ async function addView(id) {
    LOAD FILE
 ========================= */
 async function loadFile() {
-  const id = getId();
+  const slug = getSlug();
 
-  if (!id) {
+  if (!slug) {
     document.body.innerHTML = "<h2>Invalid ID</h2>";
     return;
   }
-
-  const slug = getSlug();
 
   const { data, error } = await sb
     .from("files")
