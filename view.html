@@ -51,19 +51,22 @@ const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   GET PARAM ID
+   GET SLUG (FIX FINAL)
 ========================= */
 function getSlug() {
-  const path = window.location.pathname;
-  const slug = path.replace("/view/", "");
-  return slug.split("?")[0];
+  const params = new URLSearchParams(window.location.search);
+  return params.get("slug");
 }
 
 /* =========================
    ADD VIEW
 ========================= */
 async function addView(id) {
-  await sb.rpc("increment_views", { row_id: id });
+  try {
+    await sb.rpc("increment_views", { row_id: id });
+  } catch (e) {
+    console.error("view error", e);
+  }
 }
 
 /* =========================
@@ -73,35 +76,41 @@ async function loadFile() {
   const slug = getSlug();
 
   if (!slug) {
-    document.body.innerHTML = "<h2>Invalid slug</h2>";
+    document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  const { data, error } = await sb
-    .from("files")
-    .select("*")
-    .eq("slug", slug)
-    .single();
+  try {
+    const { data, error } = await sb
+      .from("files")
+      .select("*")
+      .eq("slug", slug)
+      .single();
 
-  if (error || !data) {
-    document.body.innerHTML = "<h2>File not found</h2>";
-    return;
+    if (error || !data) {
+      document.body.innerHTML = "<h2>File not found</h2>";
+      return;
+    }
+
+    // UI
+    document.getElementById("fileName").textContent = data.name;
+    document.getElementById("views").textContent = "Views: " + data.views;
+
+    // LOAD HTML
+    const iframe = document.getElementById("viewer");
+
+    const res = await fetch(data.url);
+    const html = await res.text();
+
+    iframe.srcdoc = html;
+
+    // increment views
+    addView(data.id);
+
+  } catch (err) {
+    console.error(err);
+    document.body.innerHTML = "<h2>Error loading file</h2>";
   }
-
-  // UI
-  document.getElementById("fileName").textContent = data.name;
-  document.getElementById("views").textContent = "Views: " + data.views;
-
-  // render html
-  const iframe = document.getElementById("viewer");
-
-  const res = await fetch(data.url);
-  const html = await res.text();
-
-  iframe.srcdoc = html;
-
-  // increment views
-  addView(data.id);
 }
 
 /* =========================
