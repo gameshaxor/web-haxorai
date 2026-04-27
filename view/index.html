@@ -1,0 +1,6 @@
+<script>
+const path = window.location.pathname;
+const slug = path.split("/view/")[1].replace(".html", "");
+
+window.location.href = "/view.html?slug=" + slug;
+</script>
