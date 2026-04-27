@@ -28,10 +28,6 @@
       border: none;
       background: white;
     }
-
-    .badge {
-      color: #00ff9d;
-    }
   </style>
 </head>
 
@@ -51,28 +47,38 @@ const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   GET PARAM ID
+   GET SLUG (FINAL FIX)
 ========================= */
 function getSlug() {
   const path = window.location.pathname;
 
-  // contoh: /view/3d-pyramid.html
-  const parts = path.split("/").filter(Boolean);
-
-  // localhost fallback
+  // 🔥 LOCALHOST MODE
   if (path.includes("view.html")) {
     const params = new URLSearchParams(window.location.search);
     return params.get("slug");
   }
 
-  // ambil bagian terakhir
-  return parts[1] || null;
+  // 🔥 PRODUCTION MODE (/view/nama.html)
+  const parts = path.split("/");
+
+  // contoh:
+  // ["", "view", "3d-pyramid.html"]
+  if (parts.length >= 3) {
+    return parts[2];
+  }
+
+  return null;
 }
+
 /* =========================
    ADD VIEW
 ========================= */
 async function addView(id) {
-  await sb.rpc("increment_views", { row_id: id });
+  try {
+    await sb.rpc("increment_views", { row_id: id });
+  } catch (e) {
+    console.warn("View increment failed");
+  }
 }
 
 /* =========================
@@ -80,6 +86,8 @@ async function addView(id) {
 ========================= */
 async function loadFile() {
   const slug = getSlug();
+
+  console.log("Slug:", slug); // DEBUG
 
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
@@ -93,23 +101,27 @@ async function loadFile() {
     .single();
 
   if (error || !data) {
+    console.error(error);
     document.body.innerHTML = "<h2>File not found</h2>";
     return;
   }
 
-  // update UI
+  // UI
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  // ambil HTML
-  const iframe = document.getElementById("viewer");
+  // LOAD HTML
+  try {
+    const res = await fetch(data.url);
+    const html = await res.text();
 
-  const res = await fetch(data.url);
-  const html = await res.text();
+    document.getElementById("viewer").srcdoc = html;
+  } catch (err) {
+    console.error(err);
+    document.body.innerHTML = "<h2>Failed to load file</h2>";
+  }
 
-  iframe.srcdoc = html;
-
-  // tambah view
+  // increment view
   addView(data.id);
 }
 
