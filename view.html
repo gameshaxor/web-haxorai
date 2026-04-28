@@ -54,8 +54,26 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getSlug() {
+  // 🔥 ambil dari FULL URL (bukan pathname)
+  const full = window.location.href;
+
+  if (full.includes("/view/")) {
+    let slug = full.split("/view/")[1];
+
+    if (slug) {
+      slug = slug.split("?")[0];
+      slug = slug.replace(/\/$/, "");
+      return slug;
+    }
+  }
+
+  // fallback query
   const params = new URLSearchParams(window.location.search);
-  return params.get("slug");
+  if (params.get("slug")) {
+    return params.get("slug");
+  }
+
+  return null;
 }
   
 /* =========================
@@ -77,7 +95,7 @@ async function loadFile() {
     return;
   }
 
-  // 🔥 beautify URL
+  // 🔥 paksa URL tetap rapi
   if (window.location.pathname !== "/view/" + slug) {
     window.history.replaceState({}, "", "/view/" + slug);
   }
