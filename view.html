@@ -42,7 +42,7 @@
   <div id="views">Views: 0</div>
 </div>
 
-<iframe id="viewer" sandbox="allow-scripts"></iframe>
+<iframe id="viewer"></iframe>
 
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
@@ -90,7 +90,7 @@ async function loadFile() {
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  // 🔥 INI FIX UTAMA
+  // 🔥 FIX UTAMA
   document.getElementById("viewer").src = data.url;
 
   addView(data.id);
