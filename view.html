@@ -54,23 +54,8 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getSlug() {
-  const path = window.location.pathname;
-
-  // 🔥 ambil apapun setelah /view/
-  const match = path.match(/^\/view\/(.+)$/);
-
-  if (match && match[1]) {
-    return decodeURIComponent(match[1]);
-  }
-
-  // fallback query
   const params = new URLSearchParams(window.location.search);
-  if (params.get("slug")) {
-    return params.get("slug");
-  }
-
-  // fallback terakhir
-  return localStorage.getItem("current_slug");
+  return params.get("slug");
 }
   
 /* =========================
@@ -85,23 +70,18 @@ async function addView(id) {
 ========================= */
 async function loadFile() {
 
-  let slug = getSlug();
-
-  // 🔥 HARD FALLBACK (Cloudflare edge case)
-  if (!slug && window.location.href.includes("/view/")) {
-    slug = window.location.href.split("/view/")[1]?.split("?")[0];
-  }
+  const slug = getSlug();
 
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // 🔥 NORMALIZE URL (WAJIB)
+  // 🔥 beautify URL
   if (window.location.pathname !== "/view/" + slug) {
     window.history.replaceState({}, "", "/view/" + slug);
   }
-  
+
   const { data, error } = await sb
     .from("files")
     .select("*")
@@ -122,9 +102,8 @@ async function loadFile() {
   document.getElementById("viewer").srcdoc = html;
 
   addView(data.id);
-
-  localStorage.setItem("current_slug", slug);
 }
+  
 /* =========================
    INIT
 ========================= */
