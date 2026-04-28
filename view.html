@@ -28,10 +28,6 @@
       border: none;
       background: white;
     }
-
-    .badge {
-      color: #00ff9d;
-    }
   </style>
 </head>
 
@@ -45,34 +41,33 @@
 <iframe id="viewer" sandbox="allow-scripts"></iframe>
 
 <script>
-const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
-const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
-
-const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+const sb = window.supabase.createClient(
+  "https://efwgilbyldjvlbtrzwyn.supabase.co",
+  "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL"
+);
 
 /* =========================
-   GET PARAM ID
+   AMBIL SLUG (FINAL FIX)
 ========================= */
 function getSlug() {
-  const params = new URLSearchParams(window.location.search);
-  let slug = params.get("slug");
+  let path = window.location.pathname;
 
-  // kalau tidak ada di query, ambil dari path
-  if (!slug) {
-    const path = window.location.pathname;
+  // contoh: /view/bjorka.html
+  if (path.startsWith("/view/")) {
+    let slug = path.replace("/view/", "");
 
-    if (path.startsWith("/view/")) {
-      slug = path.replace("/view/", "");
-      slug = slug.split("?")[0];
-      slug = slug.replace(/\/$/, "");
-    }
+    // remove query / slash
+    slug = slug.split("?")[0];
+    slug = slug.replace(/\/$/, "");
+
+    return slug;
   }
 
-  return slug;
+  return null;
 }
-  
+
 /* =========================
-   ADD VIEW
+   VIEW COUNTER
 ========================= */
 async function addView(id) {
   await sb.rpc("increment_views", { row_id: id });
@@ -82,20 +77,6 @@ async function addView(id) {
    LOAD FILE
 ========================= */
 async function loadFile() {
-
-  // =========================
-  // 🔥 FORCE SEO URL SYNC
-  // =========================
-  const params = new URLSearchParams(window.location.search);
-  const slugFromQuery = params.get("slug");
-
-  if (slugFromQuery && window.location.pathname === "/view") {
-    window.history.replaceState({}, "", "/view/" + slugFromQuery);
-  }
-
-  // =========================
-  // ambil slug setelah URL dirapikan
-  // =========================
   const slug = getSlug();
 
   if (!slug) {
@@ -126,6 +107,7 @@ async function loadFile() {
 
   addView(data.id);
 }
+
 /* =========================
    INIT
 ========================= */
