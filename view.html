@@ -56,7 +56,6 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 function getSlug() {
   let path = window.location.pathname;
 
-  // 1. normal production
   if (path.startsWith("/view/")) {
     let slug = path.replace("/view/", "");
     slug = slug.split("?")[0];
@@ -64,14 +63,8 @@ function getSlug() {
     return slug;
   }
 
-  // 2. fallback query (?slug=)
   const params = new URLSearchParams(window.location.search);
-  if (params.get("slug")) {
-    return params.get("slug");
-  }
-
-  // 3. 🔥 SUPER IMPORTANT: fallback localStorage
-  return localStorage.getItem("current_slug");
+  return params.get("slug");
 }
   
 /* =========================
@@ -88,13 +81,10 @@ async function loadFile() {
 
   let slug = getSlug();
 
-  // 🔥 FIX: jika slug kosong, coba parse manual dari full URL
-  if (!slug) {
-    const full = window.location.href;
-
-    if (full.includes("/view/")) {
-      slug = full.split("/view/")[1]?.split("?")[0];
-    }
+  // 🔥 FORCE selalu pakai URL (anti cache lama)
+  const slugFromPath = window.location.pathname.replace("/view/", "").split("?")[0];
+  if (slugFromPath) {
+    slug = slugFromPath;
   }
 
   if (!slug) {
@@ -121,14 +111,12 @@ async function loadFile() {
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  const res = await fetch(data.url);
-  const html = await res.text();
+const res = await fetch(data.url + "?t=" + Date.now());
+const html = await res.text();
 
-  document.getElementById("viewer").srcdoc = html;
+document.getElementById("viewer").srcdoc = html;
 
   addView(data.id);
-
-  localStorage.setItem("current_slug", slug);
 }
 /* =========================
    INIT
