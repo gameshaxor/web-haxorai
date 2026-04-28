@@ -47,29 +47,33 @@
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
 const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
+
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-let currentLoadedSlug = null;
-
 /* =========================
-   GET SLUG (CLEAN & RELIABLE)
+   GET PARAM ID
 ========================= */
 function getSlug() {
-  const path = window.location.pathname;
+  let path = window.location.pathname;
 
-  // /view/bjorka.html
+  // 1. normal production
   if (path.startsWith("/view/")) {
-    return path
-      .replace("/view/", "")
-      .split("?")[0]
-      .replace(/\/$/, "");
+    let slug = path.replace("/view/", "");
+    slug = slug.split("?")[0];
+    slug = slug.replace(/\/$/, "");
+    return slug;
   }
 
-  // fallback ?slug=
+  // 2. fallback query (?slug=)
   const params = new URLSearchParams(window.location.search);
-  return params.get("slug");
-}
+  if (params.get("slug")) {
+    return params.get("slug");
+  }
 
+  // 3. 🔥 SUPER IMPORTANT: fallback localStorage
+  return localStorage.getItem("current_slug");
+}
+  
 /* =========================
    ADD VIEW
 ========================= */
@@ -78,54 +82,44 @@ async function addView(id) {
 }
 
 /* =========================
-   FORCE CLEAN URL (SAFE)
-========================= */
-function normalizeURL(slug) {
-  const expected = "/view/" + slug;
-  if (window.location.pathname !== expected) {
-    window.history.replaceState({}, "", expected);
-  }
-}
-
-/* =========================
-   LOAD FILE (CORE FIX)
+   LOAD FILE
 ========================= */
 async function loadFile() {
+
+  // =========================
+  // 🔥 FORCE CLEAN URL (PUT HERE)
+  // =========================
   const slug = getSlug();
 
-  // ❌ STOP jika tidak ada slug
+  if (slug && window.location.pathname !== "/view/" + slug) {
+    window.history.replaceState({}, "", "/view/" + slug);
+  }
+
+  // =========================
+  // VALIDATION
+  // =========================
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // 🔥 FIX: kalau slug berubah → RESET STATE TOTAL
-  if (currentLoadedSlug !== slug) {
-    currentLoadedSlug = slug;
-  }
-
-  // 🔥 paksa URL selalu clean
-  normalizeURL(slug);
-
   // =========================
-  // FETCH DATA ALWAYS FRESH
+  // FETCH DATA
   // =========================
   const { data, error } = await sb
     .from("files")
     .select("*")
     .eq("slug", slug)
-    .maybeSingle();
+    .single();
 
   if (error || !data) {
     document.body.innerHTML = "<h2>File not found</h2>";
     return;
   }
 
-  // UI update
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  // render file
   const iframe = document.getElementById("viewer");
 
   const res = await fetch(data.url);
@@ -133,21 +127,16 @@ async function loadFile() {
 
   iframe.srcdoc = html;
 
-  // view tracking
   addView(data.id);
+
+  // optional persistence
+  localStorage.setItem("current_slug", slug);
 }
-
-/* =========================
-   HANDLE BROWSER NAV (IMPORTANT FIX)
-========================= */
-window.addEventListener("popstate", () => {
-  loadFile(); // reload kalau user back/forward
-});
-
 /* =========================
    INIT
 ========================= */
 window.addEventListener("DOMContentLoaded", loadFile);
 </script>
+
 </body>
 </html>
