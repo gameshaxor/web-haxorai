@@ -28,6 +28,10 @@
       border: none;
       background: white;
     }
+
+    .badge {
+      color: #00ff9d;
+    }
   </style>
 </head>
 
@@ -43,28 +47,30 @@
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
 const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
+
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-let currentSlug = null;
-
 /* =========================
-   GET SLUG (CLEAN & RELIABLE)
+   GET SLUG (FIX FINAL)
 ========================= */
 function getSlug() {
   let path = window.location.pathname;
 
   // production: /view/bjorka.html
   if (path.startsWith("/view/")) {
-    return path.replace("/view/", "").split("?")[0].replace(/\/$/, "");
+    let slug = path.replace("/view/", "");
+    slug = slug.split("?")[0];
+    slug = slug.replace(/\/$/, "");
+    return slug;
   }
 
-  // dev fallback: /view?slug=bjorka.html
+  // fallback: /view?slug=
   const params = new URLSearchParams(window.location.search);
   return params.get("slug");
 }
 
 /* =========================
-   VIEW COUNTER
+   ADD VIEW
 ========================= */
 async function addView(id) {
   await sb.rpc("increment_views", { row_id: id });
@@ -74,46 +80,43 @@ async function addView(id) {
    LOAD FILE
 ========================= */
 async function loadFile() {
+
   const slug = getSlug();
 
+  // 🔥 FORCE CLEAN URL (SEO CONSISTENT)
+  if (slug && window.location.pathname !== "/view/" + slug) {
+    window.history.replaceState({}, "", "/view/" + slug);
+  }
+
+  // VALIDATION
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // prevent re-processing same slug
-  if (currentSlug === slug) return;
-  currentSlug = slug;
-
-  // enforce clean URL (SEO friendly)
-  if (window.location.pathname !== "/view/" + slug) {
-    window.history.replaceState({}, "", "/view/" + slug);
-  }
-
-  // fetch from supabase
+  // FETCH DATA
   const { data, error } = await sb
     .from("files")
     .select("*")
     .eq("slug", slug)
     .single();
 
-  // NOT FOUND HANDLING (IMPORTANT FIX)
   if (error || !data) {
-    document.getElementById("fileName").textContent = "404 Not Found";
-    document.getElementById("views").textContent = "Views: 0";
-    document.getElementById("viewer").srcdoc = "<h1 style='color:red;text-align:center;'>FILE NOT FOUND</h1>";
+    document.body.innerHTML = "<h2>File not found</h2>";
     return;
   }
 
-  // UI update
+  // UI UPDATE
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  // render HTML safely
+  const iframe = document.getElementById("viewer");
+
+  // load HTML safely
   const res = await fetch(data.url);
   const html = await res.text();
 
-  document.getElementById("viewer").srcdoc = html;
+  iframe.srcdoc = html;
 
   // track view
   addView(data.id);
