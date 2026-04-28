@@ -1,1 +1,1 @@
-/view/:slug   /view.html   200
+/view/*  /view.html  200
