@@ -28,6 +28,10 @@
       border: none;
       background: white;
     }
+
+    .badge {
+      color: #00ff9d;
+    }
   </style>
 </head>
 
@@ -41,39 +45,22 @@
 <iframe id="viewer" sandbox="allow-scripts"></iframe>
 
 <script>
-/* =========================
-   SUPABASE INIT
-========================= */
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
 const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   SLUG PARSER (FINAL FIX)
+   GET SLUG FROM URL PATH
 ========================= */
 function getSlug() {
   const path = window.location.pathname;
 
-  // ambil /view/slug.html
+  // /view/bjorka.html
   if (path.startsWith("/view/")) {
-    return path
-      .replace("/view/", "")
-      .split("?")[0]
-      .replace(/\/$/, "");
+    return decodeURIComponent(path.replace("/view/", ""));
   }
 
   return null;
-}
-
-/* =========================
-   INCREMENT VIEW
-========================= */
-async function addView(id) {
-  try {
-    await sb.rpc("increment_views", { row_id: id });
-  } catch (err) {
-    console.error("View error:", err);
-  }
 }
 
 /* =========================
@@ -98,27 +85,17 @@ async function loadFile() {
     return;
   }
 
-  // UI update
   document.getElementById("fileName").textContent = data.name;
-  document.getElementById("views").textContent = "Views: " + (data.views ?? 0);
+  document.getElementById("views").textContent = "Views: " + data.views;
 
-  // render HTML safely
-  try {
-    const res = await fetch(data.url);
-    const html = await res.text();
-    document.getElementById("viewer").srcdoc = html;
-  } catch (err) {
-    document.body.innerHTML = "<h2>Failed to load file</h2>";
-    return;
-  }
+  const iframe = document.getElementById("viewer");
 
-  // tracking views
-  addView(data.id);
+  const res = await fetch(data.url);
+  iframe.srcdoc = await res.text();
+
+  await sb.rpc("increment_views", { row_id: data.id });
 }
 
-/* =========================
-   INIT
-========================= */
 window.addEventListener("DOMContentLoaded", loadFile);
 </script>
 
