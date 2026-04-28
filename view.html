@@ -90,8 +90,10 @@ async function loadFile() {
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  // 🔥 FIX UTAMA DI SINI
-  document.getElementById("viewer").src = data.url;
+  const res = await fetch(data.url);
+  const html = await res.text();
+
+  document.getElementById("viewer").srcdoc = html;
 
   addView(data.id);
 }
