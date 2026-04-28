@@ -54,24 +54,31 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getSlug() {
+  // =========================
+  // 1. Coba dari pathname
+  // =========================
   let path = window.location.pathname;
 
-  // 🔥 ambil hanya bagian setelah /view/
-  if (path.startsWith("/view/")) {
-    let slug = path.substring("/view/".length);
-
-    // buang query & slash
+  if (path.startsWith("/view/") && path !== "/view/") {
+    let slug = path.replace("/view/", "");
     slug = slug.split("?")[0].replace(/^\/+|\/+$/g, "");
-
-    // 🔥 FIX: kalau ada "view/" dobel, buang
-    if (slug.startsWith("view/")) {
-      slug = slug.replace("view/", "");
-    }
-
-    return slug;
+    if (slug) return slug;
   }
 
-  // fallback query
+  // =========================
+  // 2. 🔥 FALLBACK PENTING: dari FULL URL
+  // =========================
+  const full = window.location.href;
+
+  if (full.includes("/view/")) {
+    let slug = full.split("/view/")[1];
+    slug = slug.split("?")[0].replace(/^\/+|\/+$/g, "");
+    if (slug) return slug;
+  }
+
+  // =========================
+  // 3. fallback query (?slug=)
+  // =========================
   const params = new URLSearchParams(window.location.search);
   return params.get("slug");
 }
@@ -90,21 +97,22 @@ async function loadFile() {
 
   let slug = getSlug();
 
+  // 🔥 extra fallback
+  if (!slug && window.location.href.includes("/view/")) {
+    slug = window.location.href.split("/view/")[1]?.split("?")[0];
+  }
+
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // 🔥 pastikan URL selalu bersih (tidak dobel)
+  // 🔥 paksa URL bersih
   const cleanPath = "/view/" + slug;
-
   if (window.location.pathname !== cleanPath) {
     window.history.replaceState({}, "", cleanPath);
   }
 
-  // =========================
-  // FETCH DATABASE
-  // =========================
   const { data, error } = await sb
     .from("files")
     .select("*")
@@ -116,15 +124,9 @@ async function loadFile() {
     return;
   }
 
-  // =========================
-  // UPDATE UI
-  // =========================
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  // =========================
-  // LOAD HTML (ANTI CACHE)
-  // =========================
   const res = await fetch(data.url + "?t=" + Date.now());
   const html = await res.text();
 
