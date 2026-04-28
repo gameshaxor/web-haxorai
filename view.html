@@ -68,7 +68,7 @@ async function addView(id) {
 /* =========================
    LOAD FILE
 ========================= */
-asyasync function loadFile() {
+async function loadFile() {
   const slug = getSlug();
 
   if (!slug) {
@@ -90,10 +90,8 @@ asyasync function loadFile() {
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  const res = await fetch(data.url);
-  const html = await res.text();
-
-  document.getElementById("viewer").srcdoc = html;
+  // 🔥 FIX UTAMA DI SINI
+  document.getElementById("viewer").src = data.url;
 
   addView(data.id);
 }
