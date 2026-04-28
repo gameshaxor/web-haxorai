@@ -1,1 +1,1 @@
-/view/*    /view.html?slug=:splat   200
+/view/:slug   /view.html   200
