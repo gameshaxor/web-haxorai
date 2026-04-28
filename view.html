@@ -91,7 +91,17 @@ async function loadFile() {
     document.getElementById("fileName").textContent = data.name;
     document.getElementById("views").textContent = "Views: " + data.views;
 
-    document.getElementById("viewer").src = data.url;
+    const res = await fetch(data.url);
+let html = await res.text();
+
+// 🔥 FIX BASE PATH (WAJIB)
+const baseTag = `<base href="${data.url}">`;
+
+// inject ke <head>
+html = html.replace("<head>", "<head>" + baseTag);
+
+// render ke iframe
+document.getElementById("viewer").srcdoc = html;
 
     addView(data.id);
 
