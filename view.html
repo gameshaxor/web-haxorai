@@ -28,6 +28,10 @@
       border: none;
       background: white;
     }
+
+    .badge {
+      color: #00ff9d;
+    }
   </style>
 </head>
 
@@ -43,41 +47,35 @@
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
 const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
+
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   GET SLUG (ROBUST ROUTER)
+   GET PARAM ID
 ========================= */
 function getSlug() {
-  const path = window.location.pathname;
+  let path = window.location.pathname;
 
-  // ✅ PRIMARY: /view/bjorka.html
-  const match = path.match(/^\/view\/(.+)$/);
-  if (match && match[1]) {
-    return match[1].split("?")[0].replace(/\/$/, "");
+  // 1. normal production
+  if (path.startsWith("/view/")) {
+    let slug = path.replace("/view/", "");
+    slug = slug.split("?")[0];
+    slug = slug.replace(/\/$/, "");
+    return slug;
   }
 
-  // ✅ FALLBACK: /view?slug=
+  // 2. fallback query (?slug=)
   const params = new URLSearchParams(window.location.search);
   if (params.get("slug")) {
     return params.get("slug");
   }
 
-  return null;
+  // 3. 🔥 SUPER IMPORTANT: fallback localStorage
+  return localStorage.getItem("current_slug");
 }
-
+  
 /* =========================
-   CLEAN URL FORCE (NO LOOP)
-========================= */
-function normalizeUrl(slug) {
-  const expected = "/view/" + slug;
-  if (window.location.pathname !== expected) {
-    window.history.replaceState({}, "", expected);
-  }
-}
-
-/* =========================
-   INCREMENT VIEW
+   ADD VIEW
 ========================= */
 async function addView(id) {
   await sb.rpc("increment_views", { row_id: id });
@@ -88,16 +86,26 @@ async function addView(id) {
 ========================= */
 async function loadFile() {
 
+  // =========================
+  // 🔥 FORCE CLEAN URL (PUT HERE)
+  // =========================
   const slug = getSlug();
 
+  if (slug && window.location.pathname !== "/view/" + slug) {
+    window.history.replaceState({}, "", "/view/" + slug);
+  }
+
+  // =========================
+  // VALIDATION
+  // =========================
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // 🔥 make URL clean & permanent
-  normalizeUrl(slug);
-
+  // =========================
+  // FETCH DATA
+  // =========================
   const { data, error } = await sb
     .from("files")
     .select("*")
@@ -114,18 +122,16 @@ async function loadFile() {
 
   const iframe = document.getElementById("viewer");
 
-  try {
-    const res = await fetch(data.url);
-    const html = await res.text();
+  const res = await fetch(data.url);
+  const html = await res.text();
 
-    iframe.srcdoc = html;
-  } catch (err) {
-    iframe.srcdoc = "<h3>Error loading file</h3>";
-  }
+  iframe.srcdoc = html;
 
   addView(data.id);
-}
 
+  // optional persistence
+  localStorage.setItem("current_slug", slug);
+}
 /* =========================
    INIT
 ========================= */
