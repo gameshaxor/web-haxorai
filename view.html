@@ -56,21 +56,22 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 function getSlug() {
   let path = window.location.pathname;
 
-  // production: /view/xxx.html
+  // 1. normal production
   if (path.startsWith("/view/")) {
     let slug = path.replace("/view/", "");
-    slug = decodeURIComponent(slug);
+    slug = slug.split("?")[0];
     slug = slug.replace(/\/$/, "");
     return slug;
   }
 
-  // fallback query
+  // 2. fallback query (?slug=)
   const params = new URLSearchParams(window.location.search);
   if (params.get("slug")) {
     return params.get("slug");
   }
 
-  return null;
+  // 3. 🔥 SUPER IMPORTANT: fallback localStorage
+  return localStorage.getItem("current_slug");
 }
   
 /* =========================
@@ -85,11 +86,15 @@ async function addView(id) {
 ========================= */
 async function loadFile() {
 
-  const slug = getSlug();
+  let slug = getSlug();
 
-  // 🔥 penting: ini jalan DI AWAL
-  if (slug && window.location.pathname !== "/view/" + slug) {
-    window.history.replaceState({}, "", "/view/" + slug);
+  // 🔥 FIX: jika slug kosong, coba parse manual dari full URL
+  if (!slug) {
+    const full = window.location.href;
+
+    if (full.includes("/view/")) {
+      slug = full.split("/view/")[1]?.split("?")[0];
+    }
   }
 
   if (!slug) {
@@ -97,9 +102,11 @@ async function loadFile() {
     return;
   }
 
-  // =========================
-  // FETCH DATA
-  // =========================
+  // 🔥 paksa URL tetap SEO
+  if (window.location.pathname !== "/view/" + slug) {
+    window.history.replaceState({}, "", "/view/" + slug);
+  }
+
   const { data, error } = await sb
     .from("files")
     .select("*")
@@ -114,16 +121,13 @@ async function loadFile() {
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  const iframe = document.getElementById("viewer");
-
   const res = await fetch(data.url);
   const html = await res.text();
 
-  iframe.srcdoc = html;
+  document.getElementById("viewer").srcdoc = html;
 
   addView(data.id);
 
-  // optional persistence
   localStorage.setItem("current_slug", slug);
 }
 /* =========================
