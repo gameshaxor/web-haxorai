@@ -47,37 +47,35 @@ const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   GET SLUG (SUPER STABLE)
+   🔥 SUPER ROBUST SLUG PARSER
 ========================= */
 function getSlug() {
   let slug = null;
 
-  // 1️⃣ Ambil dari pathname (normal case)
+  // 1. PRIORITAS: path (/view/xxx.html)
   const path = window.location.pathname;
-
   if (path.startsWith("/view/")) {
     slug = path.replace("/view/", "");
   }
 
-  // 2️⃣ 🔥 FIX: fallback dari full URL (Cloudflare case)
-  if (!slug || slug === "" || slug === "view") {
+  // 2. fallback: full URL parsing (anti Cloudflare bug)
+  if (!slug) {
     const full = window.location.href;
-
     if (full.includes("/view/")) {
       slug = full.split("/view/")[1];
     }
   }
 
-  // 3️⃣ bersihin slug
-  if (slug) {
-    slug = slug.split("?")[0];
-    slug = slug.replace(/\/$/, "");
-  }
-
-  // 4️⃣ fallback query (?slug=)
+  // 3. fallback: query (?slug=)
   if (!slug) {
     const params = new URLSearchParams(window.location.search);
     slug = params.get("slug");
+  }
+
+  // 4. cleanup
+  if (slug) {
+    slug = slug.split("?")[0];
+    slug = slug.replace(/\/$/, "");
   }
 
   return slug;
@@ -97,19 +95,20 @@ async function loadFile() {
 
   const slug = getSlug();
 
-  console.log("SLUG:", slug);
-  console.log("PATH:", window.location.pathname);
-
+  // ❌ kalau masih gagal → stop
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // 🔥 paksa URL tetap SEO rapi
+  // 🔥 paksa URL tetap SEO (tapi aman)
   if (window.location.pathname !== "/view/" + slug) {
     window.history.replaceState({}, "", "/view/" + slug);
   }
 
+  // =========================
+  // FETCH DATA
+  // =========================
   const { data, error } = await sb
     .from("files")
     .select("*")
@@ -121,14 +120,23 @@ async function loadFile() {
     return;
   }
 
+  // =========================
+  // UI UPDATE
+  // =========================
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
+  // =========================
+  // LOAD HTML KE IFRAME
+  // =========================
   const res = await fetch(data.url);
   const html = await res.text();
 
   document.getElementById("viewer").srcdoc = html;
 
+  // =========================
+  // TRACK VIEW
+  // =========================
   addView(data.id);
 }
 
