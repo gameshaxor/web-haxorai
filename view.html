@@ -68,7 +68,7 @@ async function addView(id) {
 /* =========================
    LOAD FILE
 ========================= */
-asyasync function loadFile() {
+async function loadFile() {
   const slug = getSlug();
 
   if (!slug) {
@@ -90,6 +90,7 @@ asyasync function loadFile() {
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
+  // 🔥 SOLUSI FINAL
   document.getElementById("viewer").src = data.url;
 
   addView(data.id);
