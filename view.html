@@ -28,10 +28,6 @@
       border: none;
       background: white;
     }
-
-    .badge {
-      color: #00ff9d;
-    }
   </style>
 </head>
 
@@ -47,35 +43,28 @@
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
 const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
-
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
+let currentSlug = null;
+
 /* =========================
-   GET PARAM ID
+   GET SLUG (CLEAN & RELIABLE)
 ========================= */
 function getSlug() {
   let path = window.location.pathname;
 
-  // 1. normal production
+  // production: /view/bjorka.html
   if (path.startsWith("/view/")) {
-    let slug = path.replace("/view/", "");
-    slug = slug.split("?")[0];
-    slug = slug.replace(/\/$/, "");
-    return slug;
+    return path.replace("/view/", "").split("?")[0].replace(/\/$/, "");
   }
 
-  // 2. fallback query (?slug=)
+  // dev fallback: /view?slug=bjorka.html
   const params = new URLSearchParams(window.location.search);
-  if (params.get("slug")) {
-    return params.get("slug");
-  }
-
-  // 3. 🔥 SUPER IMPORTANT: fallback localStorage
-  return localStorage.getItem("current_slug");
+  return params.get("slug");
 }
-  
+
 /* =========================
-   ADD VIEW
+   VIEW COUNTER
 ========================= */
 async function addView(id) {
   await sb.rpc("increment_views", { row_id: id });
@@ -85,53 +74,51 @@ async function addView(id) {
    LOAD FILE
 ========================= */
 async function loadFile() {
-
-  // =========================
-  // 🔥 FORCE CLEAN URL (PUT HERE)
-  // =========================
   const slug = getSlug();
 
-  if (slug && window.location.pathname !== "/view/" + slug) {
-    window.history.replaceState({}, "", "/view/" + slug);
-  }
-
-  // =========================
-  // VALIDATION
-  // =========================
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // =========================
-  // FETCH DATA
-  // =========================
+  // prevent re-processing same slug
+  if (currentSlug === slug) return;
+  currentSlug = slug;
+
+  // enforce clean URL (SEO friendly)
+  if (window.location.pathname !== "/view/" + slug) {
+    window.history.replaceState({}, "", "/view/" + slug);
+  }
+
+  // fetch from supabase
   const { data, error } = await sb
     .from("files")
     .select("*")
     .eq("slug", slug)
     .single();
 
+  // NOT FOUND HANDLING (IMPORTANT FIX)
   if (error || !data) {
-    document.body.innerHTML = "<h2>File not found</h2>";
+    document.getElementById("fileName").textContent = "404 Not Found";
+    document.getElementById("views").textContent = "Views: 0";
+    document.getElementById("viewer").srcdoc = "<h1 style='color:red;text-align:center;'>FILE NOT FOUND</h1>";
     return;
   }
 
+  // UI update
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  const iframe = document.getElementById("viewer");
-
+  // render HTML safely
   const res = await fetch(data.url);
   const html = await res.text();
 
-  iframe.srcdoc = html;
+  document.getElementById("viewer").srcdoc = html;
 
+  // track view
   addView(data.id);
-
-  // optional persistence
-  localStorage.setItem("current_slug", slug);
 }
+
 /* =========================
    INIT
 ========================= */
