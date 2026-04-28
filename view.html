@@ -54,33 +54,27 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getSlug() {
-  // =========================
-  // 1. Coba dari pathname
-  // =========================
-  let path = window.location.pathname;
+  const path = window.location.pathname;
+  const search = window.location.search;
+  const href = window.location.href;
 
-  if (path.startsWith("/view/") && path !== "/view/") {
-    let slug = path.replace("/view/", "");
-    slug = slug.split("?")[0].replace(/^\/+|\/+$/g, "");
-    if (slug) return slug;
+  // ✅ 1. normal: /view/xxx.html
+  if (path.startsWith("/view/") && path !== "/view") {
+    return path.replace("/view/", "").split("?")[0];
   }
 
-  // =========================
-  // 2. 🔥 FALLBACK PENTING: dari FULL URL
-  // =========================
-  const full = window.location.href;
-
-  if (full.includes("/view/")) {
-    let slug = full.split("/view/")[1];
-    slug = slug.split("?")[0].replace(/^\/+|\/+$/g, "");
-    if (slug) return slug;
+  // ✅ 2. fallback query
+  const params = new URLSearchParams(search);
+  if (params.get("slug")) {
+    return params.get("slug");
   }
 
-  // =========================
-  // 3. fallback query (?slug=)
-  // =========================
-  const params = new URLSearchParams(window.location.search);
-  return params.get("slug");
+  // ✅ 3. 🔥 HARD fallback dari full URL
+  if (href.includes("/view/")) {
+    return href.split("/view/")[1].split("?")[0];
+  }
+
+  return null;
 }
   
 /* =========================
@@ -95,22 +89,16 @@ async function addView(id) {
 ========================= */
 async function loadFile() {
 
-  let slug = getSlug();
-
-  // 🔥 extra fallback
-  if (!slug && window.location.href.includes("/view/")) {
-    slug = window.location.href.split("/view/")[1]?.split("?")[0];
-  }
+  const slug = getSlug();
 
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // 🔥 paksa URL bersih
-  const cleanPath = "/view/" + slug;
-  if (window.location.pathname !== cleanPath) {
-    window.history.replaceState({}, "", cleanPath);
+  // 🔥 paksa URL SEO hanya jika belum benar
+  if (!window.location.pathname.includes(slug)) {
+    window.history.replaceState({}, "", "/view/" + slug);
   }
 
   const { data, error } = await sb
@@ -134,6 +122,7 @@ async function loadFile() {
 
   addView(data.id);
 }
+  
 /* =========================
    INIT
 ========================= */
