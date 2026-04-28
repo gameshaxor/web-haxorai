@@ -54,26 +54,8 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getSlug() {
-  // 🔥 ambil dari FULL URL (bukan pathname)
-  const full = window.location.href;
-
-  if (full.includes("/view/")) {
-    let slug = full.split("/view/")[1];
-
-    if (slug) {
-      slug = slug.split("?")[0];
-      slug = slug.replace(/\/$/, "");
-      return slug;
-    }
-  }
-
-  // fallback query
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("slug")) {
-    return params.get("slug");
-  }
-
-  return null;
+  const match = window.location.pathname.match(/^\/view\/(.+)$/);
+  return match ? decodeURIComponent(match[1]) : null;
 }
   
 /* =========================
@@ -86,18 +68,12 @@ async function addView(id) {
 /* =========================
    LOAD FILE
 ========================= */
-async function loadFile() {
-
+asyasync function loadFile() {
   const slug = getSlug();
 
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
-  }
-
-  // 🔥 paksa URL tetap rapi
-  if (window.location.pathname !== "/view/" + slug) {
-    window.history.replaceState({}, "", "/view/" + slug);
   }
 
   const { data, error } = await sb
