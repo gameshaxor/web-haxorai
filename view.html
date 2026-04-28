@@ -28,10 +28,6 @@
       border: none;
       background: white;
     }
-
-    .badge {
-      color: #00ff9d;
-    }
   </style>
 </head>
 
@@ -47,30 +43,41 @@
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
 const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
-
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   GET PARAM ID
+   GET SLUG (ROBUST ROUTER)
 ========================= */
 function getSlug() {
   const path = window.location.pathname;
 
-  // CASE 1: /view/bjorka.html
+  // ✅ PRIMARY: /view/bjorka.html
   const match = path.match(/^\/view\/(.+)$/);
-  if (match) {
-    return decodeURIComponent(match[1]);
+  if (match && match[1]) {
+    return match[1].split("?")[0].replace(/\/$/, "");
   }
 
-  // CASE 2: fallback ?slug=
+  // ✅ FALLBACK: /view?slug=
   const params = new URLSearchParams(window.location.search);
-  const slug = params.get("slug");
-  if (slug) return slug;
+  if (params.get("slug")) {
+    return params.get("slug");
+  }
 
   return null;
-}  
+}
+
 /* =========================
-   ADD VIEW
+   CLEAN URL FORCE (NO LOOP)
+========================= */
+function normalizeUrl(slug) {
+  const expected = "/view/" + slug;
+  if (window.location.pathname !== expected) {
+    window.history.replaceState({}, "", expected);
+  }
+}
+
+/* =========================
+   INCREMENT VIEW
 ========================= */
 async function addView(id) {
   await sb.rpc("increment_views", { row_id: id });
@@ -88,11 +95,8 @@ async function loadFile() {
     return;
   }
 
-  // FIX URL agar selalu clean (tanpa query)
-  const cleanPath = "/view/" + slug;
-  if (window.location.pathname !== cleanPath) {
-    window.history.replaceState({}, "", cleanPath);
-  }
+  // 🔥 make URL clean & permanent
+  normalizeUrl(slug);
 
   const { data, error } = await sb
     .from("files")
@@ -110,13 +114,18 @@ async function loadFile() {
 
   const iframe = document.getElementById("viewer");
 
-  const res = await fetch(data.url);
-  const html = await res.text();
+  try {
+    const res = await fetch(data.url);
+    const html = await res.text();
 
-  iframe.srcdoc = html;
+    iframe.srcdoc = html;
+  } catch (err) {
+    iframe.srcdoc = "<h3>Error loading file</h3>";
+  }
 
   addView(data.id);
 }
+
 /* =========================
    INIT
 ========================= */
