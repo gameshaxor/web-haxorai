@@ -68,7 +68,7 @@ async function addView(id) {
 /* =========================
    LOAD FILE
 ========================= */
-async function loadFile() {
+async function loadFile()
   const slug = getSlug();
 
   if (!slug) {
@@ -90,8 +90,15 @@ async function loadFile() {
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  // 🔥 FIX UTAMA
-  document.getElementById("viewer").src = data.url;
+  try {
+  const res = await fetch(data.url);
+  const html = await res.text();
+
+  document.getElementById("viewer").srcdoc = html;
+} catch (err) {
+  console.error(err);
+  document.body.innerHTML = "<h2>Gagal load HTML file</h2>";
+}
 
   addView(data.id);
 }
