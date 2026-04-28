@@ -54,14 +54,16 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getSlug() {
-  let path = window.location.pathname;
+  const path = window.location.pathname;
 
-  // hapus trailing slash
-  path = path.replace(/\/$/, "");
+  if (path.includes("/view/")) {
+    let slug = path.split("/view/")[1];
 
-  // ambil bagian setelah /view/
-  if (path.startsWith("/view/")) {
-    return decodeURIComponent(path.replace("/view/", ""));
+    // 🔥 FIX PENTING
+    slug = slug.split("?")[0];     // buang query
+    slug = slug.replace(/\/$/, ""); // buang trailing slash
+
+    return slug;
   }
 
   // fallback localhost
