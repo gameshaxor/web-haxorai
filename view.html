@@ -47,26 +47,27 @@
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
 const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
-
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+let currentLoadedSlug = null;
 
 /* =========================
    GET SLUG (CLEAN & RELIABLE)
 ========================= */
 function getSlug() {
-  let path = window.location.pathname;
+  const path = window.location.pathname;
 
-  // production: /view/bjorka.html
+  // /view/bjorka.html
   if (path.startsWith("/view/")) {
-    let slug = path.replace("/view/", "");
-    slug = slug.split("?")[0];
-    slug = slug.replace(/\/$/, "");
-    return slug || null;
+    return path
+      .replace("/view/", "")
+      .split("?")[0]
+      .replace(/\/$/, "");
   }
 
-  // fallback query (?slug=)
+  // fallback ?slug=
   const params = new URLSearchParams(window.location.search);
-  return params.get("slug") || null;
+  return params.get("slug");
 }
 
 /* =========================
@@ -77,70 +78,76 @@ async function addView(id) {
 }
 
 /* =========================
-   LOAD FILE (CORE LOGIC FIXED)
+   FORCE CLEAN URL (SAFE)
+========================= */
+function normalizeURL(slug) {
+  const expected = "/view/" + slug;
+  if (window.location.pathname !== expected) {
+    window.history.replaceState({}, "", expected);
+  }
+}
+
+/* =========================
+   LOAD FILE (CORE FIX)
 ========================= */
 async function loadFile() {
-
   const slug = getSlug();
 
-  /* ❌ HARD VALIDATION */
+  // ❌ STOP jika tidak ada slug
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  /* 🔥 FETCH FROM DB FIRST */
+  // 🔥 FIX: kalau slug berubah → RESET STATE TOTAL
+  if (currentLoadedSlug !== slug) {
+    currentLoadedSlug = slug;
+  }
+
+  // 🔥 paksa URL selalu clean
+  normalizeURL(slug);
+
+  // =========================
+  // FETCH DATA ALWAYS FRESH
+  // =========================
   const { data, error } = await sb
     .from("files")
     .select("*")
     .eq("slug", slug)
     .maybeSingle();
 
-  /* ❌ IF NOT FOUND → STOP + CLEAR STATE */
   if (error || !data) {
     document.body.innerHTML = "<h2>File not found</h2>";
     return;
   }
 
-  /* =========================
-     SEO URL NORMALIZATION
-  ========================= */
-  const cleanURL = "/view/" + slug;
-
-  if (window.location.pathname !== cleanURL) {
-    window.history.replaceState({}, "", cleanURL);
-  }
-
-  /* =========================
-     RENDER UI
-  ========================= */
+  // UI update
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
+  // render file
   const iframe = document.getElementById("viewer");
 
-  try {
-    const res = await fetch(data.url);
-    const html = await res.text();
-    iframe.srcdoc = html;
-  } catch (e) {
-    iframe.srcdoc = "<h3>Failed to load file</h3>";
-  }
+  const res = await fetch(data.url);
+  const html = await res.text();
 
-  /* =========================
-     VIEW TRACKING
-  ========================= */
+  iframe.srcdoc = html;
+
+  // view tracking
   addView(data.id);
-
-  /* OPTIONAL: analytics only (NOT routing) */
-  localStorage.setItem("last_viewed_slug", slug);
 }
+
+/* =========================
+   HANDLE BROWSER NAV (IMPORTANT FIX)
+========================= */
+window.addEventListener("popstate", () => {
+  loadFile(); // reload kalau user back/forward
+});
 
 /* =========================
    INIT
 ========================= */
 window.addEventListener("DOMContentLoaded", loadFile);
 </script>
-
 </body>
 </html>
