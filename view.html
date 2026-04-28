@@ -28,6 +28,10 @@
       border: none;
       background: white;
     }
+
+    .badge {
+      color: #00ff9d;
+    }
   </style>
 </head>
 
@@ -43,79 +47,94 @@
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
 const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
+
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   CLEAN SLUG (SOURCE OF TRUTH)
+   GET SLUG (CLEAN & RELIABLE)
 ========================= */
-function getSlugFromURL() {
+function getSlug() {
   let path = window.location.pathname;
 
-  // /view/bjorka.html
+  // production: /view/bjorka.html
   if (path.startsWith("/view/")) {
     let slug = path.replace("/view/", "");
     slug = slug.split("?")[0];
+    slug = slug.replace(/\/$/, "");
     return slug || null;
   }
 
-  return null;
+  // fallback query (?slug=)
+  const params = new URLSearchParams(window.location.search);
+  return params.get("slug") || null;
 }
 
 /* =========================
-   FORCE URL NORMALIZATION
+   ADD VIEW
 ========================= */
-function normalizeURL(slug) {
-  const expected = "/view/" + slug;
-
-  if (window.location.pathname !== expected) {
-    window.history.replaceState({}, "", expected);
-  }
+async function addView(id) {
+  await sb.rpc("increment_views", { row_id: id });
 }
 
 /* =========================
-   LOAD FILE (ALWAYS FRESH)
+   LOAD FILE (CORE LOGIC FIXED)
 ========================= */
 async function loadFile() {
 
-  const slug = getSlugFromURL();
+  const slug = getSlug();
 
-  // ❌ NO fallback = no ghost data bug
+  /* ❌ HARD VALIDATION */
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  normalizeURL(slug);
-
-  // 🔥 ALWAYS FETCH BY CURRENT SLUG
+  /* 🔥 FETCH FROM DB FIRST */
   const { data, error } = await sb
     .from("files")
     .select("*")
     .eq("slug", slug)
     .maybeSingle();
 
+  /* ❌ IF NOT FOUND → STOP + CLEAR STATE */
   if (error || !data) {
     document.body.innerHTML = "<h2>File not found</h2>";
     return;
   }
 
+  /* =========================
+     SEO URL NORMALIZATION
+  ========================= */
+  const cleanURL = "/view/" + slug;
+
+  if (window.location.pathname !== cleanURL) {
+    window.history.replaceState({}, "", cleanURL);
+  }
+
+  /* =========================
+     RENDER UI
+  ========================= */
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
   const iframe = document.getElementById("viewer");
 
-  const res = await fetch(data.url);
-  const html = await res.text();
+  try {
+    const res = await fetch(data.url);
+    const html = await res.text();
+    iframe.srcdoc = html;
+  } catch (e) {
+    iframe.srcdoc = "<h3>Failed to load file</h3>";
+  }
 
-  iframe.srcdoc = html;
+  /* =========================
+     VIEW TRACKING
+  ========================= */
+  addView(data.id);
 
-  await sb.rpc("increment_views", { row_id: data.id });
+  /* OPTIONAL: analytics only (NOT routing) */
+  localStorage.setItem("last_viewed_slug", slug);
 }
-
-/* =========================
-   HANDLE BACK/FORWARD BROWSER NAV
-========================= */
-window.addEventListener("popstate", loadFile);
 
 /* =========================
    INIT
