@@ -92,7 +92,8 @@ async function loadFile() {
   // =========================
   const currentPath = window.location.pathname;
 
-  if (currentPath === "/view") {
+  // tidak perlu redirect manual lagi
+// Cloudflare sudah handle routing
     const params = new URLSearchParams(window.location.search);
     const slug = params.get("slug");
 
