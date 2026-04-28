@@ -47,26 +47,36 @@
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
 const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
-
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-let currentSlug = null;
-
 /* =========================
-   GET SLUG (SOURCE OF TRUTH)
+   GET SLUG (SINGLE SOURCE OF TRUTH)
 ========================= */
 function getSlug() {
-  const path = window.location.pathname;
+  let path = window.location.pathname;
 
+  // remove query + slash
+  path = path.split("?")[0].replace(/\/$/, "");
+
+  // production: /view/bjorka.html
   if (path.startsWith("/view/")) {
-    let slug = path.replace("/view/", "");
-    slug = slug.split("?")[0];
-    slug = slug.replace(/\/$/, "");
-    return slug || null;
+    return path.replace("/view/", "");
   }
 
+  // fallback /view?slug=
   const params = new URLSearchParams(window.location.search);
   return params.get("slug");
+}
+
+/* =========================
+   FORCE CLEAN URL (ONLY IF NEEDED)
+========================= */
+function normalizeUrl(slug) {
+  const correct = "/view/" + slug;
+
+  if (window.location.pathname !== correct) {
+    window.history.replaceState({}, "", correct);
+  }
 }
 
 /* =========================
@@ -82,39 +92,29 @@ async function addView(id) {
 async function loadFile() {
 
   const slug = getSlug();
-  currentSlug = slug;
 
-  // ❌ INVALID URL
+  // ❌ no slug = invalid
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // 🔥 FORCE CLEAN URL (ONLY ONCE)
-  const cleanPath = "/view/" + slug;
+  // 🔥 normalize URL only after slug confirmed
+  normalizeUrl(slug);
 
-  if (window.location.pathname !== cleanPath) {
-    window.history.replaceState({}, "", cleanPath);
-  }
-
-  // =========================
-  // FETCH DATA
-  // =========================
+  // fetch from DB
   const { data, error } = await sb
     .from("files")
     .select("*")
     .eq("slug", slug)
     .single();
 
-  // ❌ FILE NOT FOUND (INI FIX UTAMA KAMU)
+  // ❌ ONLY invalid if NOT FOUND IN DB
   if (error || !data) {
     document.body.innerHTML = "<h2>File not found</h2>";
     return;
   }
 
-  // =========================
-  // RENDER UI
-  // =========================
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
@@ -127,16 +127,6 @@ async function loadFile() {
 
   addView(data.id);
 }
-
-/* =========================
-   HANDLE BROWSER NAVIGATION (IMPORTANT FIX)
-========================= */
-window.addEventListener("popstate", () => {
-  const slug = getSlug();
-  if (slug !== currentSlug) {
-    location.reload();
-  }
-});
 
 /* =========================
    INIT
