@@ -54,24 +54,16 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getSlug() {
-  let path = window.location.pathname;
+  const path = window.location.pathname;
 
-  // 1. normal production
+  // CASE 1: /view/bjorka.html
   if (path.startsWith("/view/")) {
-    let slug = path.replace("/view/", "");
-    slug = slug.split("?")[0];
-    slug = slug.replace(/\/$/, "");
-    return slug;
+    return path.replace("/view/", "").replace(/\/$/, "");
   }
 
-  // 2. fallback query (?slug=)
+  // CASE 2: fallback legacy (?slug=)
   const params = new URLSearchParams(window.location.search);
-  if (params.get("slug")) {
-    return params.get("slug");
-  }
-
-  // 3. 🔥 SUPER IMPORTANT: fallback localStorage
-  return localStorage.getItem("current_slug");
+  return params.get("slug");
 }
   
 /* =========================
@@ -86,26 +78,19 @@ async function addView(id) {
 ========================= */
 async function loadFile() {
 
-  // =========================
-  // 🔥 FORCE CLEAN URL (PUT HERE)
-  // =========================
   const slug = getSlug();
 
-  if (slug && window.location.pathname !== "/view/" + slug) {
-    window.history.replaceState({}, "", "/view/" + slug);
-  }
-
-  // =========================
-  // VALIDATION
-  // =========================
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // =========================
-  // FETCH DATA
-  // =========================
+  // 🔥 FORCE CLEAN URL (HANYA SEKALI)
+  const cleanPath = `/view/${slug}`;
+  if (window.location.pathname !== cleanPath) {
+    window.history.replaceState({}, "", cleanPath);
+  }
+
   const { data, error } = await sb
     .from("files")
     .select("*")
@@ -128,9 +113,6 @@ async function loadFile() {
   iframe.srcdoc = html;
 
   addView(data.id);
-
-  // optional persistence
-  localStorage.setItem("current_slug", slug);
 }
 /* =========================
    INIT
