@@ -50,14 +50,14 @@ const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   GET SLUG FROM URL PATH
+   GET SLUG (FINAL FIX)
 ========================= */
 function getSlug() {
-  const path = window.location.pathname;
+  let path = window.location.pathname;
 
   // /view/bjorka.html
   if (path.startsWith("/view/")) {
-    return decodeURIComponent(path.replace("/view/", ""));
+    return path.replace("/view/", "").split("?")[0];
   }
 
   return null;
@@ -91,7 +91,9 @@ async function loadFile() {
   const iframe = document.getElementById("viewer");
 
   const res = await fetch(data.url);
-  iframe.srcdoc = await res.text();
+  const html = await res.text();
+
+  iframe.srcdoc = html;
 
   await sb.rpc("increment_views", { row_id: data.id });
 }
