@@ -68,34 +68,40 @@ async function addView(id) {
 /* =========================
    LOAD FILE
 ========================= */
-asyasync function loadFile() {
-  const slug = getSlug();
+async function loadFile() {
+  try {
+    const slug = getSlug();
 
-  if (!slug) {
-    document.body.innerHTML = "<h2>Invalid URL</h2>";
-    return;
+    if (!slug) {
+      document.body.innerHTML = "<h2>Invalid URL</h2>";
+      return;
+    }
+
+    const { data, error } = await sb
+      .from("files")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+
+    if (error || !data) {
+      document.body.innerHTML = "<h2>File not found</h2>";
+      return;
+    }
+
+    document.getElementById("fileName").textContent = data.name;
+    document.getElementById("views").textContent = "Views: " + data.views;
+
+    const res = await fetch(data.url);
+    const html = await res.text();
+
+    document.getElementById("viewer").srcdoc = html;
+
+    addView(data.id);
+
+  } catch (e) {
+    console.error("LOAD ERROR:", e);
+    document.body.innerHTML = "<h2>Error loading file</h2>";
   }
-
-  const { data, error } = await sb
-    .from("files")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-
-  if (error || !data) {
-    document.body.innerHTML = "<h2>File not found</h2>";
-    return;
-  }
-
-  document.getElementById("fileName").textContent = data.name;
-  document.getElementById("views").textContent = "Views: " + data.views;
-
-  const res = await fetch(data.url);
-  const html = await res.text();
-
-  document.getElementById("viewer").srcdoc = html;
-
-  addView(data.id);
 }
   
 /* =========================
