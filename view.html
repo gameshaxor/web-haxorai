@@ -28,6 +28,10 @@
       border: none;
       background: white;
     }
+
+    .badge {
+      color: #00ff9d;
+    }
   </style>
 </head>
 
@@ -47,39 +51,29 @@ const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   🔥 GET SLUG SUPER STABLE
+   GET PARAM ID
 ========================= */
 function getSlug() {
+  const path = window.location.pathname;
 
-  // 1️⃣ ambil dari pathname normal
-  let path = window.location.pathname;
-
-  if (path.startsWith("/view/") && path !== "/view/") {
+  // ✅ PRIORITAS 1: URL /view/xxx.html
+  if (path.startsWith("/view/")) {
     let slug = path.replace("/view/", "");
     slug = slug.split("?")[0];
     slug = slug.replace(/\/$/, "");
-    if (slug) return slug;
+    return slug;
   }
 
-  // 2️⃣ fallback dari full URL (ANTI BUG CLOUDFLARE)
-  const full = window.location.href;
-
-  if (full.includes("/view/")) {
-    let slug = full.split("/view/")[1];
-    slug = slug.split("?")[0];
-    slug = slug.replace(/\/$/, "");
-    if (slug) return slug;
-  }
-
-  // 3️⃣ fallback query
+  // ✅ PRIORITAS 2: query ?slug=
   const params = new URLSearchParams(window.location.search);
   if (params.get("slug")) {
     return params.get("slug");
   }
 
+  // ❌ JANGAN ADA FALLBACK LAIN
   return null;
 }
-
+  
 /* =========================
    ADD VIEW
 ========================= */
@@ -94,15 +88,13 @@ async function loadFile() {
 
   const slug = getSlug();
 
-  console.log("SLUG DETECTED:", slug);
-
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // 🔥 pastikan URL selalu SEO (TAPI JANGAN RUSAK PATH)
-  if (!window.location.pathname.includes(slug)) {
+  // 🔥 pastikan URL selalu clean
+  if (window.location.pathname !== "/view/" + slug) {
     window.history.replaceState({}, "", "/view/" + slug);
   }
 
@@ -127,7 +119,7 @@ async function loadFile() {
 
   addView(data.id);
 }
-
+  
 /* =========================
    INIT
 ========================= */
