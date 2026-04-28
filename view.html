@@ -42,7 +42,7 @@
   <div id="views">Views: 0</div>
 </div>
 
-<iframe id="viewer" sandbox="allow-scripts"></iframe>
+<iframe id="viewer"></iframe>
 
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
@@ -69,39 +69,31 @@ async function addView(id) {
    LOAD FILE
 ========================= */
 async function loadFile() {
-  try {
-    const slug = getSlug();
+  const slug = getSlug();
 
-    if (!slug) {
-      document.body.innerHTML = "<h2>Invalid URL</h2>";
-      return;
-    }
-
-    const { data, error } = await sb
-      .from("files")
-      .select("*")
-      .eq("slug", slug)
-      .single();
-
-    if (error || !data) {
-      document.body.innerHTML = "<h2>File not found</h2>";
-      return;
-    }
-
-    document.getElementById("fileName").textContent = data.name;
-    document.getElementById("views").textContent = "Views: " + data.views;
-
-    const res = await fetch(data.url);
-    const html = await res.text();
-
-    document.getElementById("viewer").srcdoc = html;
-
-    addView(data.id);
-
-  } catch (err) {
-    console.error("FATAL ERROR:", err);
-    document.body.innerHTML = "<h2>Script Error</h2>";
+  if (!slug) {
+    document.body.innerHTML = "<h2>Invalid URL</h2>";
+    return;
   }
+
+  const { data, error } = await sb
+    .from("files")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) {
+    document.body.innerHTML = "<h2>File not found</h2>";
+    return;
+  }
+
+  document.getElementById("fileName").textContent = data.name;
+  document.getElementById("views").textContent = "Views: " + data.views;
+
+  // 🔥 INI KUNCI
+  document.getElementById("viewer").src = data.url;
+
+  addView(data.id);
 }
   
 /* =========================
