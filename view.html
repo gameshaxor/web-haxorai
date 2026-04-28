@@ -28,10 +28,6 @@
       border: none;
       background: white;
     }
-
-    .badge {
-      color: #00ff9d;
-    }
   </style>
 </head>
 
@@ -50,66 +46,54 @@ const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   GET SLUG (SINGLE SOURCE OF TRUTH)
+   CLEAN SLUG (SOURCE OF TRUTH)
 ========================= */
-function getSlug() {
+function getSlugFromURL() {
   let path = window.location.pathname;
 
-  // remove query + slash
-  path = path.split("?")[0].replace(/\/$/, "");
-
-  // production: /view/bjorka.html
+  // /view/bjorka.html
   if (path.startsWith("/view/")) {
-    return path.replace("/view/", "");
+    let slug = path.replace("/view/", "");
+    slug = slug.split("?")[0];
+    return slug || null;
   }
 
-  // fallback /view?slug=
-  const params = new URLSearchParams(window.location.search);
-  return params.get("slug");
+  return null;
 }
 
 /* =========================
-   FORCE CLEAN URL (ONLY IF NEEDED)
+   FORCE URL NORMALIZATION
 ========================= */
-function normalizeUrl(slug) {
-  const correct = "/view/" + slug;
+function normalizeURL(slug) {
+  const expected = "/view/" + slug;
 
-  if (window.location.pathname !== correct) {
-    window.history.replaceState({}, "", correct);
+  if (window.location.pathname !== expected) {
+    window.history.replaceState({}, "", expected);
   }
 }
 
 /* =========================
-   ADD VIEW
-========================= */
-async function addView(id) {
-  await sb.rpc("increment_views", { row_id: id });
-}
-
-/* =========================
-   LOAD FILE
+   LOAD FILE (ALWAYS FRESH)
 ========================= */
 async function loadFile() {
 
-  const slug = getSlug();
+  const slug = getSlugFromURL();
 
-  // ❌ no slug = invalid
+  // ❌ NO fallback = no ghost data bug
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // 🔥 normalize URL only after slug confirmed
-  normalizeUrl(slug);
+  normalizeURL(slug);
 
-  // fetch from DB
+  // 🔥 ALWAYS FETCH BY CURRENT SLUG
   const { data, error } = await sb
     .from("files")
     .select("*")
     .eq("slug", slug)
-    .single();
+    .maybeSingle();
 
-  // ❌ ONLY invalid if NOT FOUND IN DB
   if (error || !data) {
     document.body.innerHTML = "<h2>File not found</h2>";
     return;
@@ -125,8 +109,13 @@ async function loadFile() {
 
   iframe.srcdoc = html;
 
-  addView(data.id);
+  await sb.rpc("increment_views", { row_id: data.id });
 }
+
+/* =========================
+   HANDLE BACK/FORWARD BROWSER NAV
+========================= */
+window.addEventListener("popstate", loadFile);
 
 /* =========================
    INIT
