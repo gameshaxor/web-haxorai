@@ -28,6 +28,10 @@
       border: none;
       background: white;
     }
+
+    .badge {
+      color: #00ff9d;
+    }
   </style>
 </head>
 
@@ -41,33 +45,38 @@
 <iframe id="viewer" sandbox="allow-scripts"></iframe>
 
 <script>
-const sb = window.supabase.createClient(
-  "https://efwgilbyldjvlbtrzwyn.supabase.co",
-  "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL"
-);
+const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
+const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
+
+const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   AMBIL SLUG (FINAL FIX)
+   GET PARAM ID
 ========================= */
 function getSlug() {
   let path = window.location.pathname;
 
-  // contoh: /view/bjorka.html
+  // 🔥 handle production /view/bjorka.html
   if (path.startsWith("/view/")) {
     let slug = path.replace("/view/", "");
 
-    // remove query / slash
     slug = slug.split("?")[0];
     slug = slug.replace(/\/$/, "");
 
     return slug;
   }
 
+  // 🔥 fallback jika Cloudflare gagal routing
+  if (path === "/view") {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("slug");
+  }
+
   return null;
 }
-
+  
 /* =========================
-   VIEW COUNTER
+   ADD VIEW
 ========================= */
 async function addView(id) {
   await sb.rpc("increment_views", { row_id: id });
@@ -77,6 +86,28 @@ async function addView(id) {
    LOAD FILE
 ========================= */
 async function loadFile() {
+
+  // =========================
+  // 🔥 FIX ROUTING CLOUDFLARE
+  // =========================
+  const currentPath = window.location.pathname;
+
+  if (currentPath === "/view") {
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get("slug");
+
+    if (!slug) {
+      document.body.innerHTML = "<h2>Invalid URL</h2>";
+      return;
+    }
+
+    // paksa URL jadi SEO
+    window.history.replaceState({}, "", "/view/" + slug);
+  }
+
+  // =========================
+  // 🔽 BARU AMBIL SLUG
+  // =========================
   const slug = getSlug();
 
   if (!slug) {
@@ -107,7 +138,6 @@ async function loadFile() {
 
   addView(data.id);
 }
-
 /* =========================
    INIT
 ========================= */
