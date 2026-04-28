@@ -90,10 +90,8 @@ async function loadFile() {
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  const res = await fetch(data.url);
-  const html = await res.text();
-
-  document.getElementById("viewer").srcdoc = html;
+  // 🔥 INI FIX UTAMA
+  document.getElementById("viewer").src = data.url;
 
   addView(data.id);
 }
