@@ -82,11 +82,6 @@ async function loadFile() {
     .eq("slug", slug)
     .single();
 
-  // ✅ DEBUG DI SINI
-  console.log("SLUG:", slug);
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
-
   if (error || !data) {
     document.body.innerHTML = "<h2>File not found</h2>";
     return;
@@ -95,10 +90,8 @@ async function loadFile() {
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
-  const res = await fetch(data.url);
-  const html = await res.text();
-
-  document.getElementById("viewer").srcdoc = html;
+  // 🔥 FIX UTAMA
+  document.getElementById("viewer").src = data.url;
 
   addView(data.id);
 }
