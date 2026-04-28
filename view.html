@@ -28,10 +28,6 @@
       border: none;
       background: white;
     }
-
-    .badge {
-      color: #00ff9d;
-    }
   </style>
 </head>
 
@@ -45,67 +41,52 @@
 <iframe id="viewer" sandbox="allow-scripts"></iframe>
 
 <script>
+/* =========================
+   SUPABASE INIT
+========================= */
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
 const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
-
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   GET PARAM ID
+   SLUG PARSER (FINAL FIX)
 ========================= */
 function getSlug() {
-  let path = window.location.pathname;
+  const path = window.location.pathname;
 
-  // 1. normal production
+  // ambil /view/slug.html
   if (path.startsWith("/view/")) {
-    let slug = path.replace("/view/", "");
-    slug = slug.split("?")[0];
-    slug = slug.replace(/\/$/, "");
-    return slug;
+    return path
+      .replace("/view/", "")
+      .split("?")[0]
+      .replace(/\/$/, "");
   }
 
-  // 2. fallback query (?slug=)
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("slug")) {
-    return params.get("slug");
-  }
-
-  // 3. 🔥 SUPER IMPORTANT: fallback localStorage
-  return localStorage.getItem("current_slug");
+  return null;
 }
-  
+
 /* =========================
-   ADD VIEW
+   INCREMENT VIEW
 ========================= */
 async function addView(id) {
-  await sb.rpc("increment_views", { row_id: id });
+  try {
+    await sb.rpc("increment_views", { row_id: id });
+  } catch (err) {
+    console.error("View error:", err);
+  }
 }
 
 /* =========================
    LOAD FILE
 ========================= */
 async function loadFile() {
-
-  // =========================
-  // 🔥 FORCE CLEAN URL (PUT HERE)
-  // =========================
   const slug = getSlug();
 
-  if (slug && window.location.pathname !== "/view/" + slug) {
-    window.history.replaceState({}, "", "/view/" + slug);
-  }
-
-  // =========================
-  // VALIDATION
-  // =========================
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // =========================
-  // FETCH DATA
-  // =========================
   const { data, error } = await sb
     .from("files")
     .select("*")
@@ -117,21 +98,24 @@ async function loadFile() {
     return;
   }
 
+  // UI update
   document.getElementById("fileName").textContent = data.name;
-  document.getElementById("views").textContent = "Views: " + data.views;
+  document.getElementById("views").textContent = "Views: " + (data.views ?? 0);
 
-  const iframe = document.getElementById("viewer");
+  // render HTML safely
+  try {
+    const res = await fetch(data.url);
+    const html = await res.text();
+    document.getElementById("viewer").srcdoc = html;
+  } catch (err) {
+    document.body.innerHTML = "<h2>Failed to load file</h2>";
+    return;
+  }
 
-  const res = await fetch(data.url);
-  const html = await res.text();
-
-  iframe.srcdoc = html;
-
+  // tracking views
   addView(data.id);
-
-  // optional persistence
-  localStorage.setItem("current_slug", slug);
 }
+
 /* =========================
    INIT
 ========================= */
