@@ -28,10 +28,6 @@
       border: none;
       background: white;
     }
-
-    .badge {
-      color: #00ff9d;
-    }
   </style>
 </head>
 
@@ -51,12 +47,14 @@ const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   GET PARAM ID
+   GET PARAMS
 ========================= */
-function getFileName() {
-  const path = window.location.pathname;
-  let name = decodeURIComponent(path.split("/open/")[1] || "");
-  return name.replace(/\/$/, ""); // hapus trailing slash
+function getParams() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    id: params.get("id"),
+    slug: params.get("slug")
+  };
 }
 
 /* =========================
@@ -67,38 +65,46 @@ async function addView(id) {
 }
 
 /* =========================
-   LOAD FILE
+   LOAD FILE (SUPPORT ID + SLUG)
 ========================= */
 async function loadFile() {
-  const fileName = getFileName();
+  const { id, slug } = getParams();
 
-  if (!fileName) {
-    document.body.innerHTML = "<h2>Invalid file</h2>";
+  if (!id && !slug) {
+    document.body.innerHTML = "<h2>Invalid request</h2>";
     return;
   }
 
-  const { data, error } = await sb
-    .from("files")
-    .select("*")
-    .eq("name", fileName)
-    .single();
+  let query = sb.from("files").select("*");
+
+  if (id) {
+    query = query.eq("id", id);
+  } else if (slug) {
+    query = query.eq("slug", slug);
+  }
+
+  const { data, error } = await query.single();
 
   if (error || !data) {
     document.body.innerHTML = "<h2>File not found</h2>";
     return;
   }
 
-  // UI
+  // update UI
   document.getElementById("fileName").textContent = data.name;
-  document.getElementById("views").textContent = "Views: " + data.views;
+  document.getElementById("views").textContent = "Views: " + (data.views + 1);
 
   // render HTML
   const iframe = document.getElementById("viewer");
 
-  const res = await fetch(data.url);
-  const html = await res.text();
-
-  iframe.srcdoc = html;
+  try {
+    const res = await fetch(data.url);
+    const html = await res.text();
+    iframe.srcdoc = html;
+  } catch (err) {
+    document.body.innerHTML = "<h2>Failed to load file</h2>";
+    return;
+  }
 
   // tracking
   addView(data.id);
