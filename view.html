@@ -56,22 +56,12 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 function getSlug() {
   let path = window.location.pathname;
 
-  // 1. normal production
+  // support /view/slug.html
   if (path.startsWith("/view/")) {
-    let slug = path.replace("/view/", "");
-    slug = slug.split("?")[0];
-    slug = slug.replace(/\/$/, "");
-    return slug;
+    return path.replace("/view/", "").split("?")[0];
   }
 
-  // 2. fallback query (?slug=)
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("slug")) {
-    return params.get("slug");
-  }
-
-  // 3. 🔥 SUPER IMPORTANT: fallback localStorage
-  return localStorage.getItem("current_slug");
+  return null;
 }
   
 /* =========================
@@ -85,26 +75,18 @@ async function addView(id) {
    LOAD FILE
 ========================= */
 async function loadFile() {
-
-  let slug = getSlug();
-
-  // 🔥 FIX: jika slug kosong, coba parse manual dari full URL
-  if (!slug) {
-    const full = window.location.href;
-
-    if (full.includes("/view/")) {
-      slug = full.split("/view/")[1]?.split("?")[0];
-    }
-  }
+  const slug = getSlug();
 
   if (!slug) {
     document.body.innerHTML = "<h2>Invalid URL</h2>";
     return;
   }
 
-  // 🔥 paksa URL tetap SEO
-  if (window.location.pathname !== "/view/" + slug) {
-    window.history.replaceState({}, "", "/view/" + slug);
+  // OPTIONAL: normalisasi URL (tanpa query)
+  const cleanUrl = "/view/" + slug;
+
+  if (window.location.pathname !== cleanUrl) {
+    window.history.replaceState({}, "", cleanUrl);
   }
 
   const { data, error } = await sb
@@ -127,9 +109,8 @@ async function loadFile() {
   document.getElementById("viewer").srcdoc = html;
 
   addView(data.id);
-
-  localStorage.setItem("current_slug", slug);
 }
+  
 /* =========================
    INIT
 ========================= */
