@@ -53,12 +53,9 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 /* =========================
    GET PARAM ID
 ========================= */
-function getParams() {
+function getSlug() {
   const params = new URLSearchParams(window.location.search);
-  return {
-    id: params.get("id"),
-    slug: params.get("slug")
-  };
+  return params.get("slug");
 }
 
 /* =========================
@@ -72,27 +69,23 @@ async function addView(id) {
    LOAD FILE
 ========================= */
 async function loadFile() {
-  const id = getId();
+const slug = getSlug();
 
-  if (!id) {
-    document.body.innerHTML = "<h2>Invalid ID</h2>";
-    return;
-  }
-
-const { id, slug } = getParams();
-
-let query = sb.from("files").select("*");
-
-if (id) {
-  query = query.eq("id", id);
-} else if (slug) {
-  query = query.eq("slug", slug);
-} else {
-  document.body.innerHTML = "Invalid";
+if (!slug) {
+  document.body.innerHTML = "<h2>Invalid slug</h2>";
   return;
 }
 
-const { data, error } = await query.single();
+const { data, error } = await sb
+  .from("files")
+  .select("*")
+  .eq("slug", slug)
+  .single();
+
+  if (error || !data) {
+    document.body.innerHTML = "<h2>File not found</h2>";
+    return;
+  }
 
   // update UI
   document.getElementById("fileName").textContent = data.name;
