@@ -3,7 +3,7 @@
   "routes": [
     {
       "src": "/open/(.*)",
-      "dest": "/view.html?file=$1"
+      "dest": "/view.html"
     }
   ]
 }
