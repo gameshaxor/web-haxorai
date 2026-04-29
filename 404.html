@@ -1,0 +1,10 @@
+<script>
+const path = window.location.pathname.replace("/", "");
+
+if (!path) {
+  location.href = "/";
+}
+
+// redirect ke viewer
+location.href = "/view.html?slug=" + path;
+</script>
