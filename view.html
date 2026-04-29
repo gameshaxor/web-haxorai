@@ -42,7 +42,7 @@
   <div id="views">Views: 0</div>
 </div>
 
-<iframe id="viewer"></iframe>
+<iframe id="viewer" sandbox="allow-scripts"></iframe>
 
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
@@ -54,8 +54,24 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getSlug() {
-  const match = window.location.pathname.match(/^\/view\/(.+)$/);
-  return match ? decodeURIComponent(match[1]) : null;
+  let path = window.location.pathname;
+
+  // 1. normal production
+  if (path.startsWith("/view/")) {
+    let slug = path.replace("/view/", "");
+    slug = slug.split("?")[0];
+    slug = slug.replace(/\/$/, "");
+    return slug;
+  }
+
+  // 2. fallback query (?slug=)
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("slug")) {
+    return params.get("slug");
+  }
+
+  // 3. 🔥 SUPER IMPORTANT: fallback localStorage
+  return localStorage.getItem("current_slug");
 }
   
 /* =========================
@@ -69,46 +85,51 @@ async function addView(id) {
    LOAD FILE
 ========================= */
 async function loadFile() {
-  try {
-    const slug = getSlug();
 
-    if (!slug) {
-      document.body.innerHTML = "<h2>Invalid URL</h2>";
-      return;
+  let slug = getSlug();
+
+  // 🔥 FIX: jika slug kosong, coba parse manual dari full URL
+  if (!slug) {
+    const full = window.location.href;
+
+    if (full.includes("/view/")) {
+      slug = full.split("/view/")[1]?.split("?")[0];
     }
-
-    const { data, error } = await sb
-      .from("files")
-      .select("*")
-      .eq("slug", slug)
-      .single();
-
-    if (error || !data) {
-      document.body.innerHTML = "<h2>File not found</h2>";
-      return;
-    }
-
-    document.getElementById("fileName").textContent = data.name;
-    document.getElementById("views").textContent = "Views: " + data.views;
-
-    const res = await fetch(data.url);
-let html = await res.text();
-
-// 🔥 inject BASE supaya asset jalan
-const baseTag = `<base href="${data.url.substring(0, data.url.lastIndexOf("/") + 1)}">`;
-
-html = html.replace("<head>", "<head>" + baseTag);
-
-document.getElementById("viewer").srcdoc = html;
-
-    addView(data.id);
-
-  } catch (e) {
-    console.error("LOAD ERROR:", e);
-    document.body.innerHTML = "<h2>Error loading file</h2>";
   }
+
+  if (!slug) {
+    document.body.innerHTML = "<h2>Invalid URL</h2>";
+    return;
+  }
+
+  // 🔥 paksa URL tetap SEO
+  if (window.location.pathname !== "/view/" + slug) {
+    window.history.replaceState({}, "", "/view/" + slug);
+  }
+
+  const { data, error } = await sb
+    .from("files")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) {
+    document.body.innerHTML = "<h2>File not found</h2>";
+    return;
+  }
+
+  document.getElementById("fileName").textContent = data.name;
+  document.getElementById("views").textContent = "Views: " + data.views;
+
+  const res = await fetch(data.url);
+  const html = await res.text();
+
+  document.getElementById("viewer").srcdoc = html;
+
+  addView(data.id);
+
+  localStorage.setItem("current_slug", slug);
 }
-  
 /* =========================
    INIT
 ========================= */
