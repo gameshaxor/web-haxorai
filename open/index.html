@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    // ambil path: /open/bjorka.html
+    const path = window.location.pathname;
+    const slug = path.split("/open/")[1];
+
+    // redirect ke viewer dengan slug
+    window.location.href = "/view.html?slug=" + slug;
+  </script>
+</head>
+<body></body>
+</html>
