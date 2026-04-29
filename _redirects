@@ -1,1 +1,10 @@
-/*  /view.html  200
+# jangan override file static
+/assets/*  /assets/:splat  200
+/css/*     /css/:splat     200
+/js/*      /js/:splat      200
+
+# penting: jangan ganggu file html langsung
+/*.html    /:splat         200
+
+# SPA fallback ONLY untuk route "tanpa extension"
+/*         /view.html      200
