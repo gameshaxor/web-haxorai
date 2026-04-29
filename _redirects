@@ -1,2 +1,5 @@
-/:slug   /view.html   200
-/*       /index.html  200
+/view.html   /view.html   200
+/raw.html    /raw.html    200
+
+/:slug       /view.html   200
+/            /index.html  200
