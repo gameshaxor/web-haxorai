@@ -54,8 +54,14 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getFileName() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("file");
+  const path = window.location.pathname;
+
+  // ambil bagian setelah /open/
+  const match = path.match(/\/open\/(.+)/);
+
+  if (!match) return null;
+
+  return decodeURIComponent(match[1]);
 }
 
 /* =========================
