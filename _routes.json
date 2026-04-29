@@ -1,9 +1,8 @@
 {
   "version": 1,
+  "include": ["/*"],
+  "exclude": [],
   "routes": [
-    {
-      "src": "/open/.*",
-      "dest": "/view.html"
-    }
+    { "src": "^/open/.*", "dest": "/view.html" }
   ]
 }
