@@ -94,13 +94,11 @@ async function loadFile() {
     const res = await fetch(data.url);
 let html = await res.text();
 
-// 🔥 FIX BASE PATH (WAJIB)
-const baseTag = `<base href="${data.url}">`;
+// 🔥 inject BASE supaya asset jalan
+const baseTag = `<base href="${data.url.substring(0, data.url.lastIndexOf("/") + 1)}">`;
 
-// inject ke <head>
 html = html.replace("<head>", "<head>" + baseTag);
 
-// render ke iframe
 document.getElementById("viewer").srcdoc = html;
 
     addView(data.id);
