@@ -54,7 +54,7 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getFileName() {
-  const hash = window.location.hash.replace("#", "");
+  const hash = window.location.hash.replace("/", "");
   return decodeURIComponent(hash);
 }
 
