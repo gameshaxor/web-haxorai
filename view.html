@@ -55,13 +55,8 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 ========================= */
 function getFileName() {
   const path = window.location.pathname;
-
-  // ambil bagian setelah /open/
-  const match = path.match(/\/open\/(.+)/);
-
-  if (!match) return null;
-
-  return decodeURIComponent(match[1]);
+  let name = decodeURIComponent(path.split("/open/")[1] || "");
+  return name.replace(/\/$/, ""); // hapus trailing slash
 }
 
 /* =========================
@@ -93,9 +88,11 @@ async function loadFile() {
     return;
   }
 
+  // UI
   document.getElementById("fileName").textContent = data.name;
   document.getElementById("views").textContent = "Views: " + data.views;
 
+  // render HTML
   const iframe = document.getElementById("viewer");
 
   const res = await fetch(data.url);
@@ -103,6 +100,7 @@ async function loadFile() {
 
   iframe.srcdoc = html;
 
+  // tracking
   addView(data.id);
 }
 
