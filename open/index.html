@@ -1,14 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script>
-    // ambil path: /open/bjorka.html
-    const path = window.location.pathname;
-    const slug = path.split("/open/")[1];
-
-    // redirect ke viewer dengan slug
-    window.location.href = "/view.html?slug=" + slug;
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body></body>
+<body>
+
+<script>
+const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
+const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
+
+const sb = supabase.createClient(supabaseUrl, supabaseKey);
+
+// ambil nama file dari URL
+const path = window.location.pathname;
+const fileName = path.split("/").pop().replace(".html", "");
+
+// cari di database
+async function load() {
+  const { data } = await sb
+    .from("files")
+    .select("*")
+    .ilike("slug", fileName)
+    .single();
+
+  if (!data) {
+    document.body.innerHTML = "File not found";
+    return;
+  }
+
+  // redirect ke viewer
+  window.location.href = `/view.html?id=${data.id}`;
+}
+
+load();
+</script>
+
+</body>
 </html>
