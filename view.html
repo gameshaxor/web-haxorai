@@ -55,7 +55,17 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 ========================= */
 function getSlug() {
   const path = window.location.pathname;
-  return path.replace("/", "").trim();
+
+  // ambil dari path kalau ada
+  if (path && path !== "/" && path !== "/view.html") {
+    return path.replace("/", "").split("/")[0];
+  }
+
+  // fallback ke hash
+  const hash = window.location.hash.replace("#", "");
+  if (hash) return hash;
+
+  return null;
 }
 
 /* =========================
@@ -69,7 +79,7 @@ async function addView(id) {
    LOAD FILE
 ========================= */
 async function loadFile() {
-const slug = getSlug();
+let slug = window.location.hash.replace("#/", "");
 
 if (!slug) {
   document.body.innerHTML = "<h2>Invalid slug</h2>";
