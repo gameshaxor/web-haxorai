@@ -42,7 +42,7 @@
   <div id="views">Views: 0</div>
 </div>
 
-<iframe id="viewer" sandbox="allow-scripts"></iframe>
+<iframe id="viewer" sandbox="allow-scripts allow-same-origin"></iframe>
 
 <script>
 const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
@@ -54,6 +54,11 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getSlug() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const slugFromQuery = urlParams.get("slug");
+
+  if (slugFromQuery) return slugFromQuery;
+
   const path = window.location.pathname;
   return path.replace("/", "").trim();
 }
