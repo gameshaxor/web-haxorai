@@ -54,8 +54,9 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
    GET PARAM ID
 ========================= */
 function getSlug() {
-  const path = window.location.pathname;
-  return path.replace("/", "").trim();
+  return window.location.pathname
+    .split("/")
+    .filter(Boolean)[0]; // ambil "bjorka"
 }
 
 /* =========================
