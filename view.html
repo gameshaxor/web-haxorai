@@ -55,7 +55,7 @@ const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 ========================= */
 function getSlug() {
   const path = window.location.pathname;
-  return path.split("/").filter(Boolean)[0];
+  return path.replace("/", "").trim();
 }
 
 /* =========================
