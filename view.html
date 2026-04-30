@@ -28,6 +28,10 @@
       border: none;
       background: white;
     }
+
+    .badge {
+      color: #00ff9d;
+    }
   </style>
 </head>
 
@@ -47,66 +51,57 @@ const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   CLEAN SLUG ROUTER (IMPORTANT)
-   SUPPORT:
-   /bjorka
-   /bjorka/
-   /view.html (BLOCK)
+   GET PARAM ID
 ========================= */
 function getSlug() {
-  let path = window.location.pathname;
+  const path = window.location.pathname;
 
-  // hapus slash awal & akhir
-  path = path.replace(/^\/|\/$/g, "");
-
-  // block akses view.html langsung
-  if (path.includes("view.html")) return null;
-
-  return path;
+  return path
+    .replace(/^\/+/, "")
+    .replace(/\/+$/, "");
 }
 
 /* =========================
-   VIEW COUNTER
+   ADD VIEW
 ========================= */
 async function addView(id) {
   await sb.rpc("increment_views", { row_id: id });
 }
 
 /* =========================
-   LOAD FILE BY SLUG
+   LOAD FILE
 ========================= */
 async function loadFile() {
-  const slug = getSlug();
+const slug = getSlug();
 
-  // ❌ jika tidak ada slug → stop
-  if (!slug) {
-    document.body.innerHTML = "<h2>Invalid Route</h2>";
-    return;
-  }
+if (!slug) {
+  document.body.innerHTML = "<h2>No slug found</h2>";
+  return;
+}
 
-  // ambil data dari Supabase
-  const { data, error } = await sb
-    .from("files")
-    .select("*")
-    .eq("slug", slug)
-    .single();
+const { data, error } = await sb
+  .from("files")
+  .select("*")
+  .eq("slug", slug)
+  .single();
 
   if (error || !data) {
-    document.body.innerHTML = "<h2>File Not Found</h2>";
+    document.body.innerHTML = "<h2>File not found</h2>";
     return;
   }
 
-  // UI update
+  // update UI
   document.getElementById("fileName").textContent = data.name;
-  document.getElementById("views").textContent = "Views: " + (data.views || 0);
+  document.getElementById("views").textContent = "Views: " + data.views;
 
-  // render HTML ke iframe (AMAN dari CORS issue)
+  // tampilkan file ke iframe
   const iframe = document.getElementById("viewer");
 
-  const res = await fetch(data.url);
-  const html = await res.text();
+const res = await fetch(data.url);
+const html = await res.text();
 
-  iframe.srcdoc = html;
+// inject ke iframe
+iframe.srcdoc = html;
 
   // tambah view
   addView(data.id);
