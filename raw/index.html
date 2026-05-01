@@ -188,6 +188,9 @@ async function loadRaw() {
   fileNameGlobal = data.name;
   document.getElementById("fileName").textContent = data.name;
 
+  // 🔥 SET TITLE DINAMIS (PRO LEVEL)
+  document.title = window.location.origin + "/raw/" + data.slug;
+
   try {
     const res = await fetch(data.url);
     rawText = await res.text();
