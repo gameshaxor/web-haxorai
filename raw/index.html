@@ -28,19 +28,26 @@ const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
 
 const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-/* =========================
-   GET SLUG
-========================= */
 function getSlug() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("slug");
+  let slug = params.get("slug");
+
+  if (slug) return slug;
+
+  const path = window.location.pathname;
+
+  if (path.startsWith("/raw/")) {
+    slug = path.replace("/raw/", "").replace(/\/$/, "");
+    return slug;
+  }
+
+  return null;
 }
 
-/* =========================
-   LOAD RAW
-========================= */
 async function loadRaw() {
   const slug = getSlug();
+
+  console.log("SLUG:", slug);
 
   if (!slug) {
     document.body.innerText = "Invalid slug";
@@ -61,12 +68,11 @@ async function loadRaw() {
   const res = await fetch(data.url);
   const text = await res.text();
 
-  // tampilkan sebagai text (aman)
   document.getElementById("content").textContent = text;
 }
 
 loadRaw();
 </script>
-
+  
 </body>
 </html>
