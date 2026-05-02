@@ -193,7 +193,17 @@ async function loadRaw() {
 
   try {
     const res = await fetch(data.url);
-    rawText = await res.text();
+let html = await res.text();
+
+// 🔥 INJECT COMMENT
+const injectedComment = `<!--
+--  Uploaded on : https://web.haxorai.com/${data.slug}
+--  Official Web : https://haxorai.com
+--  web.haxorai.com/generator
+-->
+`;
+
+rawText = injectedComment + html;
   } catch {
     document.body.innerHTML = "Failed to load file";
     return;
