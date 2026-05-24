@@ -174,11 +174,11 @@ async function loadRaw() {
     return;
   }
 
-const res = await fetch(
+const apiRes = await fetch(
   `https://web.haxorai.com/api/raw?slug=${encodeURIComponent(slug)}`
 );
 
-const result = await res.json();
+const result = await apiRes.json();
 
 if (!result.success || !result.data) {
   document.body.innerHTML = "File not found";
@@ -186,11 +186,6 @@ if (!result.success || !result.data) {
 }
 
 const data = result.data;
-
-  if (error || !data) {
-    document.body.innerHTML = "File not found";
-    return;
-  }
 
   fileNameGlobal = data.name;
   document.getElementById("fileName").textContent = data.name;
