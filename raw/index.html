@@ -174,18 +174,18 @@ async function loadRaw() {
     return;
   }
 
-  const res = await fetch(
+const res = await fetch(
   `https://web.haxorai.com/api/raw?slug=${encodeURIComponent(slug)}`
 );
 
 const result = await res.json();
 
-if (!result.success || !result.file) {
+if (!result.success || !result.data) {
   document.body.innerHTML = "File not found";
   return;
 }
 
-const data = result.file;
+const data = result.data;
 
   if (error || !data) {
     document.body.innerHTML = "File not found";
@@ -198,7 +198,24 @@ const data = result.file;
   // 🔥 SET TITLE DINAMIS (PRO LEVEL)
   document.title = window.location.host + "/raw/" + data.slug;
 
-  rawText = data.content;
+  try {
+    const res = await fetch(data.url);
+let html = await res.text();
+
+// 🔥 INJECT COMMENT
+const injectedComment = `<!--
+--  Uploaded on : https://web.haxorai.com/${data.slug}
+--  Official Web : https://haxorai.com
+--  web.haxorai.com/generator
+-->
+`;
+
+rawText = injectedComment + html;
+  } catch {
+    document.body.innerHTML = "Failed to load file";
+    return;
+  }
+
   generateLines(rawText);
 
   hljs.configure({ ignoreUnescapedHTML: true });
