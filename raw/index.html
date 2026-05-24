@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>HaxorAI Code Viewer</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <!-- Highlight.js -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -105,11 +103,6 @@ code {
 </div>
 
 <script>
-const supabaseUrl = "https://efwgilbyldjvlbtrzwyn.supabase.co";
-const supabaseKey = "sb_publishable_dhXYplciBTspJbYo2Q7p2Q_aJnf_vVL";
-
-const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
-
 let rawText = "";
 let fileNameGlobal = "";
 
@@ -181,41 +174,35 @@ async function loadRaw() {
     return;
   }
 
-  const { data, error } = await sb
-    .from("files")
-    .select("*")
-    .eq("slug", slug)
-    .single();
+  try {
 
-  if (error || !data) {
+  const res = await fetch(
+    `https://web.haxorai.com/api/raw?slug=${encodeURIComponent(slug)}`
+  );
+
+  const result = await res.json();
+
+  if (!result.success) {
     document.body.innerHTML = "File not found";
     return;
   }
 
-  fileNameGlobal = data.name;
-  document.getElementById("fileName").textContent = data.name;
+  fileNameGlobal = result.name;
 
-  // 🔥 SET TITLE DINAMIS (PRO LEVEL)
-  document.title = window.location.host + "/raw/" + data.slug;
+  document.getElementById("fileName").textContent =
+    result.name;
 
-  try {
-    const res = await fetch(data.url);
-let html = await res.text();
+  document.title =
+    window.location.host + "/raw/" + result.slug;
 
-// 🔥 INJECT COMMENT
-const injectedComment = `<!--
---  Uploaded on : https://web.haxorai.com/${data.slug}
---  Official Web : https://haxorai.com
---  web.haxorai.com/generator
--->
-`;
+  rawText = result.content;
 
-rawText = injectedComment + html;
-  } catch {
-    document.body.innerHTML = "Failed to load file";
-    return;
-  }
+} catch {
 
+  document.body.innerHTML = "Failed to load file";
+  return;
+}
+  
   generateLines(rawText);
 
   hljs.configure({ ignoreUnescapedHTML: true });
