@@ -31,25 +31,41 @@
     </footer>
     <!-- Di balik layar hitam, aku menari dengan bayangan, mengurai misteri semesta digital. Kode adalah puisiku, dan setiap celah adalah cerita yang belum terungkap. -->
     <script src="https://web.haxorai.com/generator/js/script.js" defer></script>
-  <script>
+<script>
+```javascript
 (function () {
 
-    const path = window.location.pathname;
+    const url = new URL(window.location.href);
 
-    if (path.endsWith("/index.html")) {
+    let path = url.pathname;
 
-        const clean = path.replace(
-            /index\.html$/,
-            ""
-        );
+    // Hapus index.html
+    path = path.replace(/index\.html$/i, "");
 
-        window.location.replace(
-            window.location.origin + clean
-        );
+    // Hapus slash terakhir kecuali root "/"
+    if (
+        path.length > 1 &&
+        path.endsWith("/")
+    ) {
+        path = path.slice(0, -1);
+    }
 
+    // URL final
+    const cleanUrl =
+        url.origin +
+        path +
+        url.search +
+        url.hash;
+
+    // Redirect jika berbeda
+    if (
+        cleanUrl !== window.location.href
+    ) {
+        window.location.replace(cleanUrl);
     }
 
 })();
+```
 </script>
 </body>
 
