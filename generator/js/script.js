@@ -60,3 +60,36 @@ let vmo=typeof globalThis!=='undefined'?globalThis:typeof window!=='undefined'?w
   _init();
 
 })(window, document);
+
+(function () {
+
+    const url = new URL(window.location.href);
+
+    let path = url.pathname;
+
+    // Hapus index.html
+    path = path.replace(/index\.html$/i, "");
+
+    // Hapus slash terakhir kecuali root "/"
+    if (
+        path.length > 1 &&
+        path.endsWith("/")
+    ) {
+        path = path.slice(0, -1);
+    }
+
+    // URL final
+    const cleanUrl =
+        url.origin +
+        path +
+        url.search +
+        url.hash;
+
+    // Redirect jika berbeda
+    if (
+        cleanUrl !== window.location.href
+    ) {
+        window.location.replace(cleanUrl);
+    }
+
+})();
