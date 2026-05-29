@@ -1,126 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HaxorAI • System Update</title>
-
-  <style>
-    body {
-      margin: 0;
-      background: #0d1117;
-      color: #e6edf3;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-
-    .card {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 12px;
-      padding: 30px;
-      width: 90%;
-      max-width: 420px;
-      box-shadow: 0 0 40px rgba(0,0,0,0.6);
-    }
-
-    .logo {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #00ff9d;
-    }
-
-    .title {
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-
-    .desc {
-      font-size: 14px;
-      color: #8b949e;
-      margin-bottom: 20px;
-    }
-
-    /* TERMINAL */
-    .terminal {
-      background: #0d1117;
-      border: 1px solid #30363d;
-      border-radius: 8px;
-      padding: 12px;
-      font-size: 13px;
-      height: 90px;
-      overflow: hidden;
-      color: #00ff9d;
-    }
-
-    .line {
-      opacity: 0;
-      animation: fadeIn 0.5s forwards;
-    }
-
-    .line:nth-child(1) { animation-delay: 0.5s; }
-    .line:nth-child(2) { animation-delay: 1.2s; }
-    .line:nth-child(3) { animation-delay: 1.9s; }
-    .line:nth-child(4) { animation-delay: 2.6s; }
-
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-
-    /* PROGRESS */
-    .progress {
-      margin-top: 15px;
-      height: 6px;
-      background: #21262d;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    .bar {
-      height: 100%;
-      width: 0%;
-      background: #00ff9d;
-      animation: load 4s infinite;
-    }
-
-    @keyframes load {
-      0% { width: 0%; }
-      50% { width: 70%; }
-      100% { width: 100%; }
-    }
-
-    .footer {
-      margin-top: 15px;
-      font-size: 12px;
-      color: #6e7681;
-      text-align: right;
-    }
-  </style>
+    <title>HaxorAI Web</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google" content="notranslate" />
+    <meta name="author" content="Samuel Pasaribu" />
+    <meta name="description" content="HaxorAI Web is a secure digital archive of HTML creative works, experimental web pages, and deface-style art scripts built from a coder's private journey in the digital underground." />
+    <meta name="keywords" content="haxorai, html archive, deface archive, web art, html uploader, script gallery, hacker web project, digital coding archive, creative html pages, web experiments, cyber art repository" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="Googlebot-Image" content="follow, all" />
+    <meta property="og:title" content="HaxorAI Web" />
+    <meta property="og:url" content="https://web.haxorai.com/" />
+    <meta property="og:description" content="A silent collection of HTML experiments, digital artifacts, and coded expressions stored in a controlled secure archive." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="HaxorAI Web" />
+    <meta property="og:image" content="https://web.haxorai.com/thumbnail.png" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="icon" type="image/x-icon" href="https://web.haxorai.com/favicon.ico" />
+    <link rel="icon" type="image/png" href="https://web.haxorai.com/icon.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="https://web.haxorai.com/icon.png" />
+    <link rel="apple-touch-icon" href="https://web.haxorai.com/apple-touch-icon.png" />
+    <link rel="canonical" href="https://web.haxorai.com/" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" defer></script>
 </head>
+
 <body>
-
-  <div class="card">
-    <div class="logo">HaxorAI</div>
-    <div class="title">System Upgrade in Progress</div>
-    <div class="desc">Kami sedang meningkatkan performa dan keamanan sistem.</div>
-
-    <div class="terminal">
-      <div class="line">> Initializing system...</div>
-      <div class="line">> Updating core modules...</div>
-      <div class="line">> Securing environment...</div>
-      <div class="line">> Deploying new interface...</div>
+    <div class="mobile-header">
+        <div class="mobile-logo"><a href="https://web.haxorai.com" class="logo-link">HAXORAI WEB</a></div>
+        <div class="mobile-toggle" id="toggleBtn" onclick="toggleMenu()" aria-label="Toggle navigation menu" role="button" tabindex="0"></div>
     </div>
 
-    <div class="progress">
-      <div class="bar"></div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <div class="container">
+
+        <div class="sidebar" id="sidebar">
+            <div class="logo"><a href="https://web.haxorai.com" class="logo-link">HAXORAI WEB</a></div>
+            <div class="menu">
+                <a href="generator" class="menu-generator">Generator</a>
+                <a href="sitemap" class="menu-sitemap">Sitemap</a>
+            </div>
+        </div>
+
+        <main class="main">
+            <div id="notifBox"></div>
+            <div class="card">
+                <div id="paginationTop" class="pagination"></div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th id="tableTitle">Last Uploaded</th>
+                            <th>Size</th>
+                            <th>Open</th>
+                            <th>Code</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fileList">
+                    </tbody>
+                </table>
+                <div id="paginationBottom" class="pagination"></div>
+            </div>
+            <div id="requestInfo" class="request-info"></div>
+        </main>
     </div>
 
-    <div class="footer">Please check back later</div>
-  </div>
+    <button class="search-float" onclick="openSearchModal()" aria-label="Open search"></button>
 
+    <div id="searchModal" class="search-modal">
+        <div class="search-box">
+            <button class="search-close" type="button" onclick="closeSearchModal()" aria-label="Close search modal"></button>
+            <div class="search-title">
+                Search Filename
+            </div>
+            <form onsubmit="submitSearch(event)">
+                <div class="search-row">
+                    <label for="searchInput" class="sr-only">Search filename</label>
+                    <input type="text" id="searchInput" placeholder="example-file" autocomplete="off" required />
+                    <button type="submit" class="search-submit"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        © <span id="footerYear"></span> <span>haxorai.com</span>
+    </footer>
+
+    <script src="js/script.js" defer></script>
 </body>
+
 </html>
