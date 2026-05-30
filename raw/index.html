@@ -1,34 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>HaxorAI Code Viewer</title>
-
-<!-- Highlight.js -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
-<link rel="stylesheet" href="css/style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" defer></script>
+    <title>HaxorAI Code Viewer</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google" content="notranslate" />
+    <meta name="author" content="Samuel Pasaribu" />
+    <meta name="description" content="View and inspect source code stored in the HaxorAI Web archive. Read HTML files, review code structure, copy source code, and download archived web projects." />
+    <meta name="keywords" content="haxorai code viewer, source code viewer, html source viewer, raw code archive, html archive, web code repository, code inspection, html uploader, haxorai raw, source code download, html file viewer, web archive source" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="Googlebot-Image" content="follow, all" />
+    <meta property="og:title" content="HaxorAI Code Viewer" />
+    <meta property="og:url" content="https://web.haxorai.com/raw" />
+    <meta property="og:description" content="Browse source code from archived HTML projects stored in the HaxorAI Web repository." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="HaxorAI Web" />
+    <meta property="og:image" content="https://web.haxorai.com/thumbnail.png" />
+    <link rel="icon" type="image/x-icon" href="https://web.haxorai.com/favicon.ico" />
+    <link rel="icon" type="image/png" href="https://web.haxorai.com/icon.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="https://web.haxorai.com/icon.png" />
+    <link rel="apple-touch-icon" href="https://web.haxorai.com/apple-touch-icon.png" />
+    <link rel="canonical" href="https://web.haxorai.com/raw" />
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" defer></script>
 </head>
 
 <body>
 
-<div class="topbar">
-<div class="filename" id="fileName">
-  <div class="skeleton filename-skeleton"></div>
-</div>
+    <div class="topbar">
+        <div class="filename" id="fileName">
+            <div class="skeleton filename-skeleton"></div>
+        </div>
 
-  <div class="actions">
-    <button onclick="copyCode()">Copy</button>
-    <button onclick="downloadFile()">Download</button>
-  </div>
-</div>
+        <div class="actions">
+            <button onclick="copyCode()">Copy</button>
+            <button onclick="downloadFile()">Download</button>
+        </div>
+    </div>
 
-<div class="code-container">
-  <div class="lines" id="lines"></div>
-<pre>
+    <div class="code-container">
+        <div class="lines" id="lines"></div>
+        <pre>
 <code id="code">
 <div class="code-skeleton">
   <span class="skeleton"></span>
@@ -40,9 +57,10 @@
 </div>
 </code>
 </pre>
-</div>
+    </div>
 
-<script src="js/script.js" defer></script>
+    <script src="js/script.js" defer></script>
 
 </body>
+
 </html>
