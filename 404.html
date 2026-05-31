@@ -57,17 +57,15 @@ body{
     max-width:700px;
 }
 
-.error-image{
-    width:120px;
-    height:120px;
-    margin:0 auto 25px;
-    border-radius:50%;
-    border:2px solid rgba(211,227,253,.08);
-    background:
-    radial-gradient(circle at center,
-    rgba(211,227,253,.08),
-    transparent 70%);
-}
+        .error-image {
+            background-image: url(https://i.pinimg.com/originals/d0/66/78/d06678b0d250c806c08f67c0cae3be17.gif);
+            background-size: cover;
+            background-position: center;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-top: 20px;
+        }
 
 /* =========================
    HACKER 404 EFFECT
@@ -251,17 +249,50 @@ body{
         aria-label="Back to Home">
     </a>
 
-    <div class="footer">
+    <div class="footer" id="liveDateTime">
         haxorai.com
     </div>
 
 </div>
 
 <script>
-
 document.getElementById("requestedUrl").textContent =
     window.location.pathname || "/";
 
+// =========================
+// LIVE DATE TIME
+// =========================
+
+function updateDateTime(){
+
+    const now = new Date();
+
+    const text =
+        now.toLocaleString(
+            "en-US",
+            {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false
+            }
+        );
+
+    document.getElementById(
+        "liveDateTime"
+    ).textContent = text;
+}
+
+updateDateTime();
+
+setInterval(
+    updateDateTime,
+    1000
+);
 </script>
 
 </body>
