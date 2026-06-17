@@ -5,23 +5,23 @@
 	"display": "fullscreen",
 	"orientation": "landscape",
 	"icons": [{
-		"src": "RunIntoDeath/icon-16.png",
+		"src": "icon-16.png",
 		"sizes": "16x16",
 		"type": "image/png"
 	}, {
-		"src": "RunIntoDeath/icon-32.png",
+		"src": "icon-32.png",
 		"sizes": "32x32",
 		"type": "image/png"
 	}, {
-		"src": "RunIntoDeath/icon-128.png",
+		"src": "icon-128.png",
 		"sizes": "128x128",
 		"type": "image/png"
 	}, {
-		"src": "RunIntoDeath/icon-256.png",
+		"src": "icon-256.png",
 		"sizes": "144x144",
 		"type": "image/png"
 	}, {
-		"src": "RunIntoDeath/icon-256.png",
+		"src": "icon-256.png",
 		"sizes": "256x256",
 		"type": "image/png"
 	}]
