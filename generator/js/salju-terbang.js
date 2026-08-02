@@ -1,119 +1,223 @@
 /*!
  * HaxorAI Flying Snow
- * File : salju-terbang.js
- * Modern Version
  * https://web.haxorai.com
+ * Version : Generator Compatible
  */
 
 (() => {
     "use strict";
 
-    // Hindari double load
-    if (window.__HAXORAI_FLYING_SNOW__) return;
-    window.__HAXORAI_FLYING_SNOW__ = true;
+    // ==========================
+    // DESTROY OLD INSTANCE
+    // ==========================
 
-    const COUNT = 120;
+    if (window.__HAXORAI_SNOW__) {
+
+        try {
+
+            cancelAnimationFrame(window.__HAXORAI_SNOW__.animation);
+
+            window.removeEventListener(
+                "resize",
+                window.__HAXORAI_SNOW__.resizeHandler
+            );
+
+            if (window.__HAXORAI_SNOW__.container) {
+                window.__HAXORAI_SNOW__.container.remove();
+            }
+
+        } catch (e) {}
+
+        delete window.__HAXORAI_SNOW__;
+    }
+
+    // ==========================
+    // CONFIG
+    // ==========================
+
+    const CONFIG = {
+
+        count: 120,
+        minSize: 8,
+        maxSize: 24,
+        minSpeed: 1,
+        maxSpeed: 4
+
+    };
+
+    // ==========================
+    // CONTAINER
+    // ==========================
 
     const container = document.createElement("div");
+
     container.id = "haxorai-flying-snow";
 
     container.style.cssText = `
-        position:fixed;
-        inset:0;
-        overflow:hidden;
-        pointer-events:none;
-        z-index:999999;
-    `;
+position:fixed;
+left:0;
+top:0;
+width:100%;
+height:100%;
+overflow:hidden;
+pointer-events:none;
+z-index:999999;
+`;
 
     document.body.appendChild(container);
 
-    const flakes = [];
+    // ==========================
+    // UTIL
+    // ==========================
 
-    function random(min, max) {
+    function rand(min, max) {
         return Math.random() * (max - min) + min;
     }
 
+    const flakes = [];
+
+    // ==========================
+    // CREATE
+    // ==========================
+
     function createFlake() {
 
-        const flake = document.createElement("span");
+        const el = document.createElement("span");
 
-        flake.innerHTML = "❄";
+        const size = rand(
+            CONFIG.minSize,
+            CONFIG.maxSize
+        );
 
-        const size = random(8, 24);
+        el.textContent = "❄";
 
-        flake.style.cssText = `
-            position:absolute;
-            color:#fff;
-            font-size:${size}px;
-            left:${random(0, window.innerWidth)}px;
-            top:${random(-window.innerHeight, 0)}px;
-            opacity:${random(.4,1)};
-            text-shadow:
-                0 0 6px rgba(255,255,255,.9),
-                0 0 12px rgba(255,255,255,.5);
-            will-change:transform;
-            user-select:none;
-        `;
+        el.style.cssText = `
+position:absolute;
+left:0;
+top:0;
+font-size:${size}px;
+color:#fff;
+opacity:${rand(.4,1)};
+user-select:none;
+will-change:transform;
+text-shadow:
+0 0 5px #fff,
+0 0 12px rgba(255,255,255,.7);
+`;
 
-        container.appendChild(flake);
+        container.appendChild(el);
 
         flakes.push({
-            el: flake,
-            x: parseFloat(flake.style.left),
-            y: parseFloat(flake.style.top),
-            speedY: random(1,4),
-            speedX: random(-1.5,1.5),
-            rotate: random(0,360),
-            rotateSpeed: random(-2,2)
+
+            el,
+
+            x: rand(0, window.innerWidth),
+
+            y: rand(-window.innerHeight, 0),
+
+            vx: rand(-1.5, 1.5),
+
+            vy: rand(
+                CONFIG.minSpeed,
+                CONFIG.maxSpeed
+            ),
+
+            angle: rand(0, 360),
+
+            rotate: rand(-2, 2),
+
+            wave: rand(0, Math.PI * 2),
+
+            waveSpeed: rand(0.01, 0.05)
+
         });
+
     }
 
-    for (let i = 0; i < COUNT; i++) {
+    for (let i = 0; i < CONFIG.count; i++) {
         createFlake();
     }
 
-    function animate() {
+    // ==========================
+    // LOOP
+    // ==========================
+
+    let animationId = 0;
+
+    function loop() {
 
         const w = window.innerWidth;
         const h = window.innerHeight;
 
         for (const f of flakes) {
 
-            f.x += f.speedX;
-            f.y += f.speedY;
-            f.rotate += f.rotateSpeed;
+            f.wave += f.waveSpeed;
 
-            if (f.y > h + 30) {
-                f.y = -30;
-                f.x = random(0, w);
+            f.x += f.vx + Math.sin(f.wave) * 0.6;
+
+            f.y += f.vy;
+
+            f.angle += f.rotate;
+
+            if (f.y > h + 40) {
+
+                f.y = -40;
+
+                f.x = rand(0, w);
+
             }
 
-            if (f.x > w + 20)
-                f.x = -20;
+            if (f.x < -40)
+                f.x = w + 40;
 
-            if (f.x < -20)
-                f.x = w + 20;
+            if (f.x > w + 40)
+                f.x = -40;
 
             f.el.style.transform =
-                `translate(${f.x}px,${f.y}px) rotate(${f.rotate}deg)`;
+                `translate(${f.x}px,${f.y}px) rotate(${f.angle}deg)`;
+
         }
 
-        requestAnimationFrame(animate);
+        animationId = requestAnimationFrame(loop);
+
     }
 
-    animate();
+    loop();
 
-    window.addEventListener("resize", () => {
+    // ==========================
+    // RESIZE
+    // ==========================
+
+    function resizeHandler() {
 
         const w = window.innerWidth;
 
         flakes.forEach(f => {
 
             if (f.x > w)
-                f.x = random(0, w);
+                f.x = rand(0, w);
 
         });
 
-    });
+    }
+
+    window.addEventListener(
+        "resize",
+        resizeHandler
+    );
+
+    // ==========================
+    // SAVE INSTANCE
+    // ==========================
+
+    window.__HAXORAI_SNOW__ = {
+
+        animation: animationId,
+
+        resizeHandler,
+
+        container
+
+    };
 
 })();
