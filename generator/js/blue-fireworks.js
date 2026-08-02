@@ -38,14 +38,7 @@ clearTimeout(aa_timerID);
 for (maa=1;maa<(naa+1);maa++){
       document.getElementById('dotaa'+maa).style.visibility='hidden';
 }
-var tama=document.getElementById("tama");
-
-if(!tama){
-    clearTimeout(aa_timerID);
-    return;
-}
-
-tama.style.visibility="visible";
+      document.getElementById('tama').style.visibility='visible';
 dbcH = document.body.clientHeight;
 if(dbcH>1200){
 wpy = document.documentElement.clientHeight;
@@ -75,14 +68,7 @@ HABABI4();
 aa_timerID=0;
 
 function HABABI4() { 
-var tama=document.getElementById("tama");
-
-if(!tama){
-    clearTimeout(aa_timerID);
-    return;
-}
-
-tama.style.visibility="visible";
+        document.getElementById('tama').style.visibility='visible';
 if(bcy>bby){
         document.getElementById('tama').style.top  = bcy-10+"px";
         document.getElementById('tama').style.left = bcx+20+"px";
@@ -100,14 +86,7 @@ HABABI2();
 }
 
 function HABABI2() { 
-var tama=document.getElementById("tama");
-
-if(!tama){
-    clearTimeout(aa_timerID);
-    return;
-}
-
-tama.style.visibility="hidden";
+      document.getElementById('tama').style.visibility='hidden';
 for (maa=1;maa<(naa+1);maa++){
 if(maa<=(naa*12/26)){
 bdx[maa]=bcx+1*Math.cos((maa-1)*2*3.14/12);
@@ -134,13 +113,9 @@ HABABI();
 function HABABI() {
 paa=paa+1;
 for (maa=1;maa<(naa+1);maa++){
-var dot = document.getElementById("dotaa"+maa);
-
-if(!dot) continue;
-
-dot.style.visibility = "visible";
-dot.style.top = bdy[maa] + "px";
-dot.style.left = bdx[maa] + "px";
+        document.getElementById('dotaa'+maa).style.visibility='visible';
+        document.getElementById('dotaa'+maa).style.top  = bdy[maa]+"px";
+        document.getElementById('dotaa'+maa).style.left = bdx[maa]+"px";
 if (appVersion.indexOf("msie") > -1) {
 if(paa<40){
         document.getElementById('dotaa'+maa).filters.alpha.opacity=100;
@@ -175,3 +150,5 @@ clearTimeout(aa_timerID);
 HABABI3();
 }
 }
+
+
