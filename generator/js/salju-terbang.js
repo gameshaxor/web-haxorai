@@ -1,99 +1,119 @@
 /*!
  * HaxorAI Flying Snow
- * Compatible with iframe, document.write(), Cloudflare & modern browsers.
+ * File : salju-terbang.js
+ * Modern Version
  * https://web.haxorai.com
  */
 
-(function () {
+(() => {
     "use strict";
 
+    // Hindari double load
     if (window.__HAXORAI_FLYING_SNOW__) return;
     window.__HAXORAI_FLYING_SNOW__ = true;
 
-    const TOTAL = 120;
+    const COUNT = 120;
 
-    const style = document.createElement("style");
-    style.textContent = `
-    #haxorai-snow{
+    const container = document.createElement("div");
+    container.id = "haxorai-flying-snow";
+
+    container.style.cssText = `
         position:fixed;
         inset:0;
         overflow:hidden;
         pointer-events:none;
         z-index:999999;
-    }
-
-    .haxorai-flake{
-        position:absolute;
-        top:-30px;
-        color:#fff;
-        font-size:8px;
-        user-select:none;
-        will-change:transform;
-        text-shadow:0 0 6px rgba(255,255,255,.8);
-        animation-name:haxorai-fall,haxorai-sway;
-        animation-timing-function:linear,ease-in-out;
-        animation-iteration-count:infinite,infinite;
-        opacity:.9;
-    }
-
-    @keyframes haxorai-fall{
-        from{
-            transform:translateY(-30px);
-        }
-        to{
-            transform:translateY(calc(100vh + 40px));
-        }
-    }
-
-    @keyframes haxorai-sway{
-        0%{margin-left:0;}
-        25%{margin-left:-20px;}
-        50%{margin-left:20px;}
-        75%{margin-left:-15px;}
-        100%{margin-left:0;}
-    }
     `;
-
-    document.head.appendChild(style);
-
-    const container = document.createElement("div");
-    container.id = "haxorai-snow";
 
     document.body.appendChild(container);
 
+    const flakes = [];
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
     function createFlake() {
 
-        const flake = document.createElement("div");
-
-        flake.className = "haxorai-flake";
+        const flake = document.createElement("span");
 
         flake.innerHTML = "❄";
 
-        const size = 8 + Math.random() * 18;
-        const left = Math.random() * 100;
-        const duration = 6 + Math.random() * 8;
-        const delay = Math.random() * -duration;
-        const sway = 2 + Math.random() * 3;
+        const size = random(8, 24);
 
-        flake.style.left = left + "%";
-        flake.style.fontSize = size + "px";
-
-        flake.style.animationDuration =
-            duration + "s," +
-            sway + "s";
-
-        flake.style.animationDelay =
-            delay + "s," +
-            (Math.random() * -3) + "s";
-
-        flake.style.opacity =
-            (0.4 + Math.random() * 0.6).toFixed(2);
+        flake.style.cssText = `
+            position:absolute;
+            color:#fff;
+            font-size:${size}px;
+            left:${random(0, window.innerWidth)}px;
+            top:${random(-window.innerHeight, 0)}px;
+            opacity:${random(.4,1)};
+            text-shadow:
+                0 0 6px rgba(255,255,255,.9),
+                0 0 12px rgba(255,255,255,.5);
+            will-change:transform;
+            user-select:none;
+        `;
 
         container.appendChild(flake);
+
+        flakes.push({
+            el: flake,
+            x: parseFloat(flake.style.left),
+            y: parseFloat(flake.style.top),
+            speedY: random(1,4),
+            speedX: random(-1.5,1.5),
+            rotate: random(0,360),
+            rotateSpeed: random(-2,2)
+        });
     }
 
-    for (let i = 0; i < TOTAL; i++) {
+    for (let i = 0; i < COUNT; i++) {
         createFlake();
     }
+
+    function animate() {
+
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        for (const f of flakes) {
+
+            f.x += f.speedX;
+            f.y += f.speedY;
+            f.rotate += f.rotateSpeed;
+
+            if (f.y > h + 30) {
+                f.y = -30;
+                f.x = random(0, w);
+            }
+
+            if (f.x > w + 20)
+                f.x = -20;
+
+            if (f.x < -20)
+                f.x = w + 20;
+
+            f.el.style.transform =
+                `translate(${f.x}px,${f.y}px) rotate(${f.rotate}deg)`;
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener("resize", () => {
+
+        const w = window.innerWidth;
+
+        flakes.forEach(f => {
+
+            if (f.x > w)
+                f.x = random(0, w);
+
+        });
+
+    });
 
 })();
