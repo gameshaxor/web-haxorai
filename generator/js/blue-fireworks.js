@@ -1,154 +1,346 @@
-imgpre = new Image();
-imgpre.scr = "https://cdn.jsdelivr.net/gh/samuelpasaribu/defacer/img/star_blue.gif";
-imgpre.scr = "https://cdn.jsdelivr.net/gh/samuelpasaribu/defacer/img/star01.gif";
+/*!
+ * HaxorAI Blue Fireworks
+ * https://web.haxorai.com
+ * Canvas Animation Version
+ * Generator Compatible
+ */
 
-var bcx=0;
-var bcy=0;
-var naa=26;
-var bex = 500;
-var bey = 200;
+(() => {
 
-bdx=new Array();
-bdy=new Array();
-ixa=new Array();
-lya=new Array();
-dotaa=new Array();
-hosi=new Array();
-var kaa;
-var paa=0;
-var bax,bay;
+    "use strict";
 
 
-var jaa=0;
-hosi[0]="https://cdn.jsdelivr.net/gh/samuelpasaribu/defacer/img/star_blue.gif";
-for (maa=1;maa<(naa+1);maa++){
-if (jaa == (hosi.length-1)) { jaa = 0; } else { jaa += 1; }
-document.write("<div id=\"dotaa"+maa+"\" style=\"position:absolute; z-index:"+ maa +" ;filter:alpha;visibility:hidden; top:0px; left:0px;\"><img src=\"" + hosi[jaa] + "\" border=\"0\"></div>");
-}
-document.write("<div id=\"tama\" style=\"position:absolute; visibility:hidden; top:0px; left:0px;\"><img src=\"https://cdn.jsdelivr.net/gh/samuelpasaribu/defacer/img/star01.gif\"></div>");
+    // ==========================
+    // REMOVE OLD INSTANCE
+    // ==========================
+
+    if (window.__HAXORAI_BLUE_FIREWORKS__) {
+
+        try {
+
+            cancelAnimationFrame(
+                window.__HAXORAI_BLUE_FIREWORKS__.animation
+            );
+
+            window.removeEventListener(
+                "resize",
+                window.__HAXORAI_BLUE_FIREWORKS__.resizeHandler
+            );
+
+            window.__HAXORAI_BLUE_FIREWORKS__.canvas.remove();
+
+        } catch (e) {}
+
+        delete window.__HAXORAI_BLUE_FIREWORKS__;
+
+    }
 
 
-var userAgent = window.navigator.userAgent.toLowerCase();
-var appVersion = window.navigator.appVersion.toLowerCase();
 
-setTimeout("HABABI3()",100);
+    // ==========================
+    // CANVAS
+    // ==========================
 
-function HABABI3() { 
-clearTimeout(aa_timerID);
-for (maa=1;maa<(naa+1);maa++){
-      document.getElementById('dotaa'+maa).style.visibility='hidden';
-}
-      document.getElementById('tama').style.visibility='visible';
-dbcH = document.body.clientHeight;
-if(dbcH>1200){
-wpy = document.documentElement.clientHeight;
-wpx = document.documentElement.clientWidth-200;
-}else{
-wpy = document.body.clientHeight;
-wpx = document.body.clientWidth-200;
-}
+    const canvas = document.createElement("canvas");
 
-dmbsT = document.body.scrollTop;
-dmdEsT = document.documentElement.scrollTop;
-if(dmbsT>=dmdEsT){
-scy = document.body.scrollTop;
-scx = document.body.scrollLeft;
-}else{
-scy = document.documentElement.scrollTop;
-scx = document.documentElement.scrollLeft;
-}
-bby = scy+100+100*Math.random();
-bbx = scx+50+wpx*Math.random();
-bcy = wpy+scy-50;
-bcx = bbx;
-xco=0;
-xyu=0;
-HABABI4();
-}
-aa_timerID=0;
+    canvas.id = "haxorai-blue-fireworks";
 
-function HABABI4() { 
-        document.getElementById('tama').style.visibility='visible';
-if(bcy>bby){
-        document.getElementById('tama').style.top  = bcy-10+"px";
-        document.getElementById('tama').style.left = bcx+20+"px";
-if(xco==0){xyu=xyu+1};
-if(xco==1){xyu=xyu-1};
-if(xyu>=3){xco=1};
-if(xyu<=-3){xco=0};
-bcx=bcx-xyu;
-bcy=bcy-15;
-aa_timerID=setTimeout("HABABI4()",50);
-}else{
-clearTimeout(aa_timerID);
-HABABI2();
-}
-}
-
-function HABABI2() { 
-      document.getElementById('tama').style.visibility='hidden';
-for (maa=1;maa<(naa+1);maa++){
-if(maa<=(naa*12/26)){
-bdx[maa]=bcx+1*Math.cos((maa-1)*2*3.14/12);
-bdy[maa]=bcy-1*Math.sin((maa-1)*2*3.14/12);
-ixa[maa]=bdx[maa]-bcx;
-lya[maa]=bdy[maa]-bcy;
-}else if(maa<=(naa*20/26)){
-bdx[maa]=bcx+0.6*Math.cos((maa-1)*2*3.14/8);
-bdy[maa]=bcy-0.6*Math.sin((maa-1)*2*3.14/8);
-ixa[maa]=bdx[maa]-bcx;
-lya[maa]=bdy[maa]-bcy;
-}else{
-bdx[maa]=bcx+0.3*Math.cos((maa-1)*2*3.14/6);
-bdy[maa]=bcy-0.3*Math.sin((maa-1)*2*3.14/6);
-ixa[maa]=bdx[maa]-bcx;
-lya[maa]=bdy[maa]-bcy;
-}
-}
-kaa=20;
-paa=0;
-HABABI();
-}
-
-function HABABI() {
-paa=paa+1;
-for (maa=1;maa<(naa+1);maa++){
-        document.getElementById('dotaa'+maa).style.visibility='visible';
-        document.getElementById('dotaa'+maa).style.top  = bdy[maa]+"px";
-        document.getElementById('dotaa'+maa).style.left = bdx[maa]+"px";
-if (appVersion.indexOf("msie") > -1) {
-if(paa<40){
-        document.getElementById('dotaa'+maa).filters.alpha.opacity=100;
-}else if(paa<80){
-        document.getElementById('dotaa'+maa).filters.alpha.opacity=100-50*Math.random();
-}else{
-dea=paa-80;
-        document.getElementById('dotaa'+maa).filters.alpha.opacity=100-50*Math.random()-2.5*dea;
-}
-}
-if(userAgent.indexOf("firefox") > -1){
-if(paa<40){
-        document.getElementById('dotaa'+maa).style.MozOpacity=1;
-}else if(paa<80){
-        document.getElementById('dotaa'+maa).style.MozOpacity=1-0.5*Math.random();
-}else{
-dea=paa-80;
-        document.getElementById('dotaa'+maa).style.MozOpacity=1-0.5*Math.random()-0.025*dea;
-}
-}
-bdx[maa]=bdx[maa]+kaa*ixa[maa];
-bdy[maa]=bdy[maa]+kaa*lya[maa]+1+1*Math.random();
-kaa=kaa*0.994;
-}
-aa_timerID=setTimeout("HABABI()",50);
-if (paa>=120) {
-paa=120;
-for (maa=1;maa<(naa+1);maa++){
-      document.getElementById('dotaa'+maa).style.visibility='hidden';
-}
-clearTimeout(aa_timerID);
-HABABI3();
-}
-}
+    const ctx = canvas.getContext("2d");
 
 
+    canvas.style.cssText = `
+position:fixed;
+left:0;
+top:0;
+width:100%;
+height:100%;
+pointer-events:none;
+z-index:999998;
+`;
+
+
+    document.body.appendChild(canvas);
+
+
+
+    function resizeCanvas(){
+
+        canvas.width =
+            window.innerWidth;
+
+        canvas.height =
+            window.innerHeight;
+
+    }
+
+
+    resizeCanvas();
+
+
+
+    // ==========================
+    // CONFIG
+    // ==========================
+
+    const particles = [];
+
+    const fireworks = [];
+
+
+
+    // ==========================
+    // RANDOM
+    // ==========================
+
+    function random(min,max){
+
+        return Math.random() *
+        (max-min)+min;
+
+    }
+
+
+
+    // ==========================
+    // CREATE EXPLOSION
+    // ==========================
+
+    function createFirework(){
+
+
+        const x =
+            random(
+                canvas.width * .15,
+                canvas.width * .85
+            );
+
+
+        const y =
+            random(
+                canvas.height *.15,
+                canvas.height *.55
+            );
+
+
+
+        const amount =
+            random(40,80);
+
+
+
+        for(
+            let i=0;
+            i<amount;
+            i++
+        ){
+
+            const angle =
+                Math.random() *
+                Math.PI *
+                2;
+
+
+            const speed =
+                random(1,5);
+
+
+
+            particles.push({
+
+                x,
+
+                y,
+
+                vx:
+                    Math.cos(angle)
+                    * speed,
+
+
+                vy:
+                    Math.sin(angle)
+                    * speed,
+
+
+                alpha:1,
+
+
+                size:
+                    random(1,3),
+
+
+                gravity:
+                    .03,
+
+
+                decay:
+                    random(
+                        .008,
+                        .02
+                    )
+
+            });
+
+        }
+
+
+    }
+
+
+
+    // ==========================
+    // AUTO FIREWORK TIMER
+    // ==========================
+
+    setInterval(()=>{
+
+        createFirework();
+
+    },1200);
+
+
+
+
+    // ==========================
+    // DRAW
+    // ==========================
+
+    function animate(){
+
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+
+
+        for(
+            let i=particles.length-1;
+            i>=0;
+            i--
+        ){
+
+            const p =
+                particles[i];
+
+
+            p.x += p.vx;
+
+            p.y += p.vy;
+
+
+            p.vy += p.gravity;
+
+
+            p.alpha -= p.decay;
+
+
+
+            ctx.beginPath();
+
+
+            ctx.fillStyle =
+            `
+            rgba(
+            0,
+            170,
+            255,
+            ${p.alpha}
+            )
+            `;
+
+
+            ctx.shadowBlur = 12;
+
+
+            ctx.shadowColor =
+            "#00aaff";
+
+
+
+            ctx.arc(
+                p.x,
+                p.y,
+                p.size,
+                0,
+                Math.PI*2
+            );
+
+
+            ctx.fill();
+
+
+
+            if(
+                p.alpha <=0
+            ){
+
+                particles.splice(
+                    i,
+                    1
+                );
+
+            }
+
+
+        }
+
+
+        animation =
+            requestAnimationFrame(
+                animate
+            );
+
+    }
+
+
+    let animation =
+        requestAnimationFrame(
+            animate
+        );
+
+
+
+
+    // ==========================
+    // RESIZE SUPPORT
+    // ==========================
+
+    function resizeHandler(){
+
+        resizeCanvas();
+
+    }
+
+
+    window.addEventListener(
+        "resize",
+        resizeHandler
+    );
+
+
+
+
+    // ==========================
+    // SAVE INSTANCE
+    // ==========================
+
+    window.__HAXORAI_BLUE_FIREWORKS__ = {
+
+
+        canvas,
+
+
+        animation,
+
+
+        resizeHandler
+
+
+    };
+
+
+
+})();
