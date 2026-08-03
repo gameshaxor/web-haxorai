@@ -1,7 +1,7 @@
 /*!
  * HaxorAI Cyber Grid Effect
  * File : cyber-grid.js
- * Modern Canvas Version
+ * Modern Neon Grid Animation
  * https://web.haxorai.com
  */
 
@@ -23,7 +23,8 @@
         width:100%;
         height:100%;
         pointer-events:none;
-        z-index:999998;
+        z-index:999997;
+        opacity:.45;
     `;
 
 
@@ -47,49 +48,29 @@
 
     resize();
 
+    window.addEventListener("resize", resize);
 
-    window.addEventListener(
-        "resize",
-        resize
-    );
 
 
     /*
-        GRID CONFIG
+        GRID SETTINGS
     */
 
-    const gridSize = 45;
+    const grid = {
 
-    let offset = 0;
+        size:80,
 
+        offset:0,
 
-    /*
-        PARTICLE DATA
-    */
+        speed:0.7,
 
-    const particles = [];
+        perspective:0.035
 
-
-    for(let i = 0; i < 80; i++){
-
-        particles.push({
-
-            x:Math.random()*window.innerWidth,
-
-            y:Math.random()*window.innerHeight,
-
-            size:Math.random()*2+1,
-
-            speed:Math.random()*0.8+0.2
-
-        });
-
-    }
+    };
 
 
 
-    function drawGrid(){
-
+    function drawBackground(){
 
         ctx.clearRect(
             0,
@@ -100,11 +81,11 @@
 
 
         /*
-            DARK OVERLAY
+            Dark transparent overlay
         */
 
         ctx.fillStyle =
-        "rgba(0,0,0,0.15)";
+            "rgba(0,0,0,0.15)";
 
         ctx.fillRect(
             0,
@@ -116,34 +97,64 @@
 
 
         /*
-            MOVING GRID
+            Horizon
         */
 
+        const horizon =
+            height * 0.45;
+
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            0,
+            horizon
+        );
+
+        ctx.lineTo(
+            width,
+            horizon
+        );
+
+
+        ctx.strokeStyle =
+            "rgba(0,255,255,.8)";
 
         ctx.lineWidth = 1;
 
 
+        ctx.stroke();
+
+
+
+        /*
+            Vertical cyber lines
+        */
+
         for(
-            let x = -gridSize;
-            x < width + gridSize;
-            x += gridSize
+            let x=-width;
+            x<width*2;
+            x+=grid.size
         ){
 
             ctx.beginPath();
 
+
             ctx.moveTo(
-                x + offset,
-                0
+                width/2,
+                horizon
             );
 
+
             ctx.lineTo(
-                x + offset,
+                x,
                 height
             );
 
 
             ctx.strokeStyle =
-            "rgba(0,255,255,0.18)";
+            "rgba(0,255,255,.35)";
 
 
             ctx.stroke();
@@ -152,163 +163,88 @@
 
 
 
+
+        /*
+            Moving horizontal lines
+        */
+
         for(
-            let y = 0;
-            y < height;
-            y += gridSize
+            let y=0;
+            y<height;
+            y+=grid.size
         ){
+
+
+            let depth =
+            y + grid.offset;
+
+
+            let perspective =
+            horizon +
+            (depth-horizon)
+            *
+            1.4;
+
+
 
             ctx.beginPath();
 
 
             ctx.moveTo(
                 0,
-                y + offset
+                perspective
             );
 
 
             ctx.lineTo(
                 width,
-                y + offset
+                perspective
             );
 
 
             ctx.strokeStyle =
-            "rgba(0,255,255,0.18)";
+            "rgba(0,150,255,.35)";
 
 
             ctx.stroke();
 
+
+        }
+
+    }
+
+
+
+    function animate(){
+
+
+        grid.offset += grid.speed;
+
+
+        if(
+            grid.offset >
+            grid.size
+        ){
+
+            grid.offset = 0;
+
         }
 
 
 
-        /*
-            MOVING HORIZONTAL SCAN
-        */
+        drawBackground();
 
-
-        let scan =
-        (offset * 5) % height;
-
-
-        const gradient =
-        ctx.createLinearGradient(
-            0,
-            scan - 80,
-            0,
-            scan + 80
-        );
-
-
-        gradient.addColorStop(
-            0,
-            "rgba(0,255,255,0)"
-        );
-
-
-        gradient.addColorStop(
-            .5,
-            "rgba(0,255,255,0.25)"
-        );
-
-
-        gradient.addColorStop(
-            1,
-            "rgba(0,255,255,0)"
-        );
-
-
-        ctx.fillStyle = gradient;
-
-
-        ctx.fillRect(
-            0,
-            scan - 80,
-            width,
-            160
-        );
-
-
-
-
-        /*
-            DIGITAL PARTICLES
-        */
-
-
-        particles.forEach(p=>{
-
-
-            p.y += p.speed;
-
-
-            if(p.y > height){
-
-                p.y = -10;
-
-                p.x =
-                Math.random()*width;
-
-            }
-
-
-
-            ctx.beginPath();
-
-
-            ctx.arc(
-                p.x,
-                p.y,
-                p.size,
-                0,
-                Math.PI*2
-            );
-
-
-            ctx.fillStyle =
-            "rgba(0,255,255,0.8)";
-
-
-            ctx.shadowBlur = 10;
-
-            ctx.shadowColor =
-            "#00ffff";
-
-
-            ctx.fill();
-
-
-            ctx.shadowBlur = 0;
-
-
-        });
-
-
-
-        /*
-            GRID MOVEMENT
-        */
-
-        offset += 0.35;
-
-
-        if(offset >= gridSize){
-
-            offset = 0;
-
-        }
 
 
         requestAnimationFrame(
-            drawGrid
+            animate
         );
 
     }
 
 
 
-    drawGrid();
+    animate();
 
 
 
