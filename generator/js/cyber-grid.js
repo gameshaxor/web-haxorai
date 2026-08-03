@@ -1,348 +1,309 @@
-/*!
- * HaxorAI Cyber Grid Effect
- * File : cyber-grid.js
- * Neon Perspective Grid Animation
- * Compatible with HaxorAI Generator
- * https://web.haxorai.com
- */
+/*
+HaxorAI Cyber Grid Animation
+Created for https://web.haxorai.com/generator
 
-(() => {
+Neon moving grid background
+No image dependency
+No external library
+*/
 
-    "use strict";
+(function () {
 
-
-    /*
-        Prevent duplicate loading
-    */
-
-    if (window.__HAXORAI_CYBER_GRID__) {
-        return;
-    }
-
-    window.__HAXORAI_CYBER_GRID__ = true;
+"use strict";
 
 
+/*
+================================
+CONFIGURATION
+================================
+*/
 
-    /*
-        Create Canvas
-    */
+const CONFIG = {
+    id: "haxorai-cyber-grid",
 
-    const canvas = document.createElement("canvas");
+    gridSize: 45,
 
-    canvas.id = "haxorai-cyber-grid";
+    speed: 0.6,
 
+    perspective: 900,
 
-    canvas.style.position = "fixed";
-    canvas.style.top = "0";
-    canvas.style.left = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-
-    canvas.style.pointerEvents = "none";
-    canvas.style.zIndex = "999999";
-
-    canvas.style.opacity = "0.55";
-
-
-    document.body.appendChild(canvas);
+    opacity: 0.55
+};
 
 
 
-    const ctx = canvas.getContext("2d");
+/*
+================================
+REMOVE DUPLICATE INSTANCE
+================================
+*/
+
+const oldCanvas = document.getElementById(CONFIG.id);
+
+if (oldCanvas) {
+    oldCanvas.remove();
+}
 
 
 
-    let width = 0;
-    let height = 0;
+/*
+================================
+CREATE CANVAS
+================================
+*/
+
+const canvas = document.createElement("canvas");
+
+canvas.id = CONFIG.id;
+
+
+canvas.style.position = "fixed";
+canvas.style.top = "0";
+canvas.style.left = "0";
+
+canvas.style.width = "100%";
+canvas.style.height = "100%";
+
+canvas.style.pointerEvents = "none";
+
+canvas.style.zIndex = "0";
+
+canvas.style.opacity = CONFIG.opacity;
 
 
 
-    /*
-        Responsive
-    */
-
-    function resize(){
-
-        width = canvas.width =
-            window.innerWidth;
+document.body.appendChild(canvas);
 
 
-        height = canvas.height =
-            window.innerHeight;
 
-    }
+const ctx = canvas.getContext("2d");
 
 
-    resize();
+
+let width;
+let height;
+
+let offset = 0;
 
 
-    window.addEventListener(
-        "resize",
-        resize
+
+/*
+================================
+RESIZE
+================================
+*/
+
+function resize(){
+
+    width = canvas.width =
+        window.innerWidth;
+
+    height = canvas.height =
+        window.innerHeight;
+
+}
+
+
+resize();
+
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+
+
+/*
+================================
+DRAW GRID
+================================
+*/
+
+function draw(){
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
     );
 
 
-
-
-    /*
-        Grid Configuration
-    */
-
-    const config = {
-
-        gridSize: 70,
-
-        offset:0,
-
-        speed:1.2,
-
-        horizon:0.48
-
-    };
-
+    ctx.save();
 
 
 
     /*
-        Draw Grid
+    Perspective center
     */
 
-    function draw(){
+    ctx.translate(
+        width / 2,
+        height * 0.45
+    );
 
 
-        ctx.clearRect(
-            0,
-            0,
-            width,
-            height
-        );
+    ctx.strokeStyle =
+        "rgba(0,255,255,0.35)";
 
 
+    ctx.lineWidth = 1;
 
-        /*
-            Dark futuristic overlay
-        */
 
-        ctx.fillStyle =
-        "rgba(0,0,0,0.18)";
 
+    /*
+    FLOOR GRID
+    */
 
-        ctx.fillRect(
-            0,
-            0,
-            width,
-            height
-        );
+    let distance = 900;
 
 
+    for(
+        let y = -distance;
+        y < distance;
+        y += CONFIG.gridSize
+    ){
 
+        let scale =
+            (y + distance) /
+            (distance * 2);
 
-        const horizon =
-        height * config.horizon;
 
-
-
-
-        /*
-            Neon Horizon
-        */
-
-        ctx.beginPath();
-
-
-        ctx.moveTo(
-            0,
-            horizon
-        );
-
-
-        ctx.lineTo(
-            width,
-            horizon
-        );
-
-
-        ctx.strokeStyle =
-        "rgba(0,255,255,0.85)";
-
-
-        ctx.lineWidth = 1;
-
-
-        ctx.stroke();
-
-
-
-
-
-        /*
-            Vertical Perspective Lines
-        */
-
-        for(
-            let x=-width;
-            x<=width*2;
-            x+=config.gridSize
-        ){
-
-
-            ctx.beginPath();
-
-
-            ctx.moveTo(
-                width/2,
-                horizon
-            );
-
-
-            ctx.lineTo(
-                x,
-                height
-            );
-
-
-            ctx.strokeStyle =
-            "rgba(0,200,255,0.35)";
-
-
-            ctx.stroke();
-
-
-        }
-
-
-
-
-        /*
-            Moving Horizontal Grid
-        */
-
-
-        for(
-            let y=0;
-            y<height;
-            y+=config.gridSize
-        ){
-
-
-            let depth =
-            y + config.offset;
-
-
-
-            let position =
-            horizon +
-            (depth-horizon)
-            *
-            1.45;
-
-
-
-            ctx.beginPath();
-
-
-            ctx.moveTo(
-                0,
-                position
-            );
-
-
-            ctx.lineTo(
-                width,
-                position
-            );
-
-
-
-            ctx.strokeStyle =
-            "rgba(0,255,255,0.35)";
-
-
-
-            ctx.stroke();
-
-
-        }
-
-
-
-
-        /*
-            Neon Scan Line
-        */
-
-        const scan =
-        (config.offset*4)%height;
-
+        let py =
+            y * scale;
 
 
         ctx.beginPath();
 
-
         ctx.moveTo(
-            0,
-            scan
+            -width,
+            py
         );
-
 
         ctx.lineTo(
             width,
-            scan
+            py
         );
 
 
-        ctx.strokeStyle =
-        "rgba(0,255,255,0.15)";
-
-
         ctx.stroke();
-
 
     }
 
 
 
 
-
-
     /*
-        Animation Loop
+    Vertical lines
     */
 
-    function animate(){
+    for(
+        let x=-width;
+        x<width;
+        x+=CONFIG.gridSize
+    ){
+
+        ctx.beginPath();
 
 
-        config.offset +=
-        config.speed;
-
-
-
-        if(
-            config.offset >
-            config.gridSize
-        ){
-
-            config.offset = 0;
-
-        }
-
-
-
-        draw();
-
-
-
-        requestAnimationFrame(
-            animate
+        ctx.moveTo(
+            x,
+            -height
         );
+
+
+        ctx.lineTo(
+            x,
+            height
+        );
+
+
+        ctx.stroke();
 
     }
 
 
 
-    animate();
+    /*
+    Moving neon wave
+    */
+
+    offset += CONFIG.speed;
 
 
+    ctx.strokeStyle =
+        "rgba(0,255,120,0.55)";
+
+
+    ctx.lineWidth = 2;
+
+
+
+    ctx.beginPath();
+
+
+    for(
+        let x=-width;
+        x<width;
+        x+=20
+    ){
+
+        let y =
+        Math.sin(
+            (x + offset) * 0.015
+        ) * 40;
+
+
+        ctx.lineTo(
+            x,
+            y
+        );
+
+    }
+
+
+    ctx.stroke();
+
+
+
+    ctx.restore();
+
+
+
+    requestAnimationFrame(draw);
+
+}
+
+
+
+draw();
+
+
+
+
+/*
+================================
+KEEP ABOVE BACKGROUND
+================================
+*/
+
+const style = document.createElement("style");
+
+style.innerHTML = `
+
+#${CONFIG.id}{
+    mix-blend-mode:screen;
+}
+
+body > *:not(#${CONFIG.id}){
+    position:relative;
+    z-index:1;
+}
+
+`;
+
+document.head.appendChild(style);
 
 
 
