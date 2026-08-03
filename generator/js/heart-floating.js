@@ -1,8 +1,7 @@
 /*!
  * HaxorAI Heart Floating
  * https://web.haxorai.com
- * Wedding Love Animation
- * CSS Generated Heart
+ * Floating Hearts (Pure CSS)
  * No Image
  * No Emoji
  */
@@ -11,108 +10,78 @@
 
 "use strict";
 
+/* ===========================================================
+   REMOVE OLD INSTANCE
+=========================================================== */
 
-// ==========================
-// CLEAN OLD INSTANCE
-// ==========================
-
-if(window.__HAXORAI_HEART_FLOATING__) {
-
+if (window.__HAXORAI_HEART_FLOATING__) {
 
     try {
-
 
         cancelAnimationFrame(
             window.__HAXORAI_HEART_FLOATING__.animation
         );
 
+        window.removeEventListener(
+            "resize",
+            window.__HAXORAI_HEART_FLOATING__.resizeHandler
+        );
 
-        window
-        .__HAXORAI_HEART_FLOATING__
-        .container
-        .remove();
-
-
+        window.__HAXORAI_HEART_FLOATING__.container.remove();
 
     } catch(e){}
 
-
-
     delete window.__HAXORAI_HEART_FLOATING__;
-
 }
 
 
-
-
-
-// ==========================
-// CONFIG
-// ==========================
+/* ===========================================================
+   CONFIG
+=========================================================== */
 
 const CONFIG = {
 
-    count:60,
+    count : 45,
 
-    colors:[
+    colors : [
 
         "#ff4d6d",
-        "#ff758f",
-        "#ff8fa3",
-        "#ffb3c6",
-        "#ffccd5"
+        "#ff5d8f",
+        "#ff6fa5",
+        "#ff85b8",
+        "#ff9cc8",
+        "#ffbfd9"
 
     ]
 
 };
 
 
+/* ===========================================================
+   CONTAINER
+=========================================================== */
 
+const container = document.createElement("div");
 
+container.id = "haxorai-heart-floating";
 
-// ==========================
-// CONTAINER
-// ==========================
-
-
-const container=document.createElement("div");
-
-
-container.id="haxorai-heart-floating";
-
-
-container.style.cssText=`
-
+container.style.cssText = `
 position:fixed;
-
 left:0;
-
 top:0;
-
 width:100%;
-
 height:100%;
-
 overflow:hidden;
-
 pointer-events:none;
-
 z-index:999999;
-
 `;
-
-
 
 document.body.appendChild(container);
 
 
-
-
-
-// ==========================
-// RANDOM
-// ==========================
-
+/* ===========================================================
+   RANDOM
+=========================================================== */
 
 function random(min,max){
 
@@ -121,195 +90,103 @@ function random(min,max){
 }
 
 
+/* ===========================================================
+   HEARTS
+=========================================================== */
 
-
-
-// ==========================
-// CREATE HEART
-// ==========================
-
-
-const hearts=[];
-
-
+const hearts = [];
 
 function createHeart(){
 
 
-    const heart=document.createElement("div");
+    const heart = document.createElement("div");
 
-
-    const size=random(
-        12,
-        32
-    );
-
+    const size = random(12,30);
 
     const color =
-    CONFIG.colors[
-        Math.floor(
-            Math.random()*CONFIG.colors.length
-        )
-    ];
+        CONFIG.colors[
+            Math.floor(
+                Math.random()*CONFIG.colors.length
+            )
+        ];
 
 
-
-    heart.style.cssText=`
-
+    heart.style.cssText = `
 position:absolute;
-
 width:${size}px;
-
 height:${size}px;
-
 background:${color};
-
 transform:rotate(-45deg);
-
-border-radius:
-
-50% 50% 0 50%;
-
+opacity:${random(.45,1)};
 box-shadow:
-
 0 0 8px ${color},
-
 0 0 18px ${color};
-
-opacity:${random(.5,1)};
-
 `;
 
 
+    const before = document.createElement("span");
 
-    // membuat bentuk hati
-
-    const before=document.createElement("span");
-
-    const after=document.createElement("span");
-
-
-
-    before.style.cssText=`
-
-content:"";
-
+    before.style.cssText = `
 position:absolute;
-
-width:100%;
-
-height:100%;
-
-background:${color};
-
-border-radius:50%;
-
-top:-50%;
-
+width:${size}px;
+height:${size}px;
 left:0;
-
-`;
-
-
-
-    after.style.cssText=`
-
-content:"";
-
-position:absolute;
-
-width:100%;
-
-height:100%;
-
+top:-50%;
 background:${color};
-
 border-radius:50%;
-
-top:0;
-
-left:50%;
-
 `;
 
+    const after = document.createElement("span");
 
+    after.style.cssText = `
+position:absolute;
+width:${size}px;
+height:${size}px;
+left:50%;
+top:0;
+background:${color};
+border-radius:50%;
+`;
 
     heart.appendChild(before);
-
     heart.appendChild(after);
-
-
 
     container.appendChild(heart);
 
-
-
-
     hearts.push({
 
-        el:heart,
+        el : heart,
 
-
-        x:random(
+        x : random(
             0,
             window.innerWidth
         ),
 
-
-        y:random(
+        y : random(
             window.innerHeight,
             window.innerHeight+300
         ),
 
+        speedY : random(.5,1.8),
 
+        speedX : random(-.3,.3),
 
-        speedY:random(
-            .5,
-            2
-        ),
+        rotate : random(-8,8),
 
+        angle : random(0,360),
 
-
-        speedX:random(
-            -.8,
-            .8
-        ),
-
-
-
-        wave:random(
+        swing : random(
             0,
             Math.PI*2
         ),
 
+        swingSpeed : random(.01,.03),
 
-
-        waveSpeed:random(
-            .01,
-            .04
-        ),
-
-
-
-        rotate:random(
-            -20,
-            20
-        ),
-
-
-
-        rotateSpeed:random(
-            -.5,
-            .5
-        )
+        scale : random(.7,1.3)
 
     });
 
-
 }
-
-
-
 
 
 for(let i=0;i<CONFIG.count;i++){
@@ -319,149 +196,98 @@ for(let i=0;i<CONFIG.count;i++){
 }
 
 
+/* ===========================================================
+   LOOP
+=========================================================== */
 
-
-
-// ==========================
-// ANIMATION
-// ==========================
-
-
-let animation;
-
-
+let animation = 0;
 
 function animate(){
 
 
+    const w = window.innerWidth;
+
+
     hearts.forEach(h=>{
 
 
-        h.wave += h.waveSpeed;
-
+        h.swing += h.swingSpeed;
 
         h.y -= h.speedY;
 
-
         h.x +=
-        h.speedX +
-        Math.sin(h.wave)*0.7;
+            h.speedX +
+            Math.sin(h.swing)*0.7;
+
+        h.angle += h.rotate;
 
 
-
-        h.rotate += h.rotateSpeed;
-
-
-
-        if(h.y < -50){
-
+        if(h.y < -80){
 
             h.y =
-            window.innerHeight+50;
-
-
-            h.x =
-            random(
-                0,
-                window.innerWidth
-            );
-
-
-        }
-
-
-
-        if(h.x < -50){
+                window.innerHeight+60;
 
             h.x =
-            window.innerWidth+50;
+                random(
+                    0,
+                    w
+                );
 
         }
 
 
-        if(h.x > window.innerWidth+50){
+        h.el.style.transform =
 
-            h.x=-50;
-
-        }
-
-
-
-        h.el.style.transform=
-
-        `
-translate(${h.x}px,${h.y}px)
-rotate(-45deg)
-rotate(${h.rotate}deg)
-`;
+`translate(${h.x}px,${h.y}px)
+ rotate(${h.angle}deg)
+ scale(${h.scale})`;
 
 
 
     });
 
 
-
-    animation=
-    requestAnimationFrame(
-        animate
-    );
-
+    animation =
+        requestAnimationFrame(
+            animate
+        );
 
 }
-
-
 
 animate();
 
 
-
-
-
-// ==========================
-// RESIZE
-// ==========================
-
+/* ===========================================================
+   RESIZE
+=========================================================== */
 
 function resizeHandler(){
 
+    const w = window.innerWidth;
 
     hearts.forEach(h=>{
 
+        if(h.x>w){
 
-        if(h.x>window.innerWidth){
-
-            h.x=
-            random(
-                0,
-                window.innerWidth
-            );
+            h.x = random(0,w);
 
         }
 
-
     });
-
 
 }
 
-
-
 window.addEventListener(
-"resize",
-resizeHandler
+    "resize",
+    resizeHandler
 );
 
 
+/* ===========================================================
+   SAVE INSTANCE
+=========================================================== */
 
-
-
-// ==========================
-// SAVE INSTANCE
-// ==========================
-
-
-window.__HAXORAI_HEART_FLOATING__={
-
+window.__HAXORAI_HEART_FLOATING__ = {
 
     container,
 
@@ -469,9 +295,6 @@ window.__HAXORAI_HEART_FLOATING__={
 
     resizeHandler
 
-
 };
-
-
 
 })();
