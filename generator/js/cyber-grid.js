@@ -1,250 +1,309 @@
-/*!
- * HaxorAI Cyber Grid Effect
- * File : cyber-grid.js
- * Modern Neon Grid Animation
- * https://web.haxorai.com
- */
+/*
+HaxorAI Cyber Grid Animation
+Created for https://web.haxorai.com/generator
 
-(() => {
-    "use strict";
+Neon moving grid background
+No image dependency
+No external library
+*/
 
-    // Hindari double load
-    if (window.__HAXORAI_CYBER_GRID__) return;
-    window.__HAXORAI_CYBER_GRID__ = true;
+(function () {
 
-
-    const canvas = document.createElement("canvas");
-
-    canvas.id = "haxorai-cyber-grid";
-
-    canvas.style.cssText = `
-        position:fixed;
-        inset:0;
-        width:100%;
-        height:100%;
-        pointer-events:none;
-        z-index:999997;
-        opacity:.45;
-    `;
+"use strict";
 
 
-    document.body.appendChild(canvas);
+/*
+================================
+CONFIGURATION
+================================
+*/
+
+const CONFIG = {
+    id: "haxorai-cyber-grid",
+
+    gridSize: 45,
+
+    speed: 0.6,
+
+    perspective: 900,
+
+    opacity: 0.55
+};
 
 
-    const ctx = canvas.getContext("2d");
+
+/*
+================================
+REMOVE DUPLICATE INSTANCE
+================================
+*/
+
+const oldCanvas = document.getElementById(CONFIG.id);
+
+if (oldCanvas) {
+    oldCanvas.remove();
+}
 
 
-    let width;
-    let height;
+
+/*
+================================
+CREATE CANVAS
+================================
+*/
+
+const canvas = document.createElement("canvas");
+
+canvas.id = CONFIG.id;
 
 
-    function resize(){
+canvas.style.position = "fixed";
+canvas.style.top = "0";
+canvas.style.left = "0";
 
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
+canvas.style.width = "100%";
+canvas.style.height = "100%";
 
-    }
+canvas.style.pointerEvents = "none";
+
+canvas.style.zIndex = "0";
+
+canvas.style.opacity = CONFIG.opacity;
 
 
-    resize();
 
-    window.addEventListener("resize", resize);
+document.body.appendChild(canvas);
+
+
+
+const ctx = canvas.getContext("2d");
+
+
+
+let width;
+let height;
+
+let offset = 0;
+
+
+
+/*
+================================
+RESIZE
+================================
+*/
+
+function resize(){
+
+    width = canvas.width =
+        window.innerWidth;
+
+    height = canvas.height =
+        window.innerHeight;
+
+}
+
+
+resize();
+
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+
+
+/*
+================================
+DRAW GRID
+================================
+*/
+
+function draw(){
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    ctx.save();
 
 
 
     /*
-        GRID SETTINGS
+    Perspective center
     */
 
-    const grid = {
-
-        size:80,
-
-        offset:0,
-
-        speed:0.7,
-
-        perspective:0.035
-
-    };
+    ctx.translate(
+        width / 2,
+        height * 0.45
+    );
 
 
-
-    function drawBackground(){
-
-        ctx.clearRect(
-            0,
-            0,
-            width,
-            height
-        );
+    ctx.strokeStyle =
+        "rgba(0,255,255,0.35)";
 
 
-        /*
-            Dark transparent overlay
-        */
-
-        ctx.fillStyle =
-            "rgba(0,0,0,0.15)";
-
-        ctx.fillRect(
-            0,
-            0,
-            width,
-            height
-        );
+    ctx.lineWidth = 1;
 
 
 
-        /*
-            Horizon
-        */
+    /*
+    FLOOR GRID
+    */
 
-        const horizon =
-            height * 0.45;
+    let distance = 900;
 
+
+    for(
+        let y = -distance;
+        y < distance;
+        y += CONFIG.gridSize
+    ){
+
+        let scale =
+            (y + distance) /
+            (distance * 2);
+
+
+        let py =
+            y * scale;
 
 
         ctx.beginPath();
 
         ctx.moveTo(
-            0,
-            horizon
+            -width,
+            py
         );
 
         ctx.lineTo(
             width,
-            horizon
+            py
         );
-
-
-        ctx.strokeStyle =
-            "rgba(0,255,255,.8)";
-
-        ctx.lineWidth = 1;
 
 
         ctx.stroke();
 
-
-
-        /*
-            Vertical cyber lines
-        */
-
-        for(
-            let x=-width;
-            x<width*2;
-            x+=grid.size
-        ){
-
-            ctx.beginPath();
-
-
-            ctx.moveTo(
-                width/2,
-                horizon
-            );
-
-
-            ctx.lineTo(
-                x,
-                height
-            );
-
-
-            ctx.strokeStyle =
-            "rgba(0,255,255,.35)";
-
-
-            ctx.stroke();
-
-        }
+    }
 
 
 
 
-        /*
-            Moving horizontal lines
-        */
+    /*
+    Vertical lines
+    */
 
-        for(
-            let y=0;
-            y<height;
-            y+=grid.size
-        ){
+    for(
+        let x=-width;
+        x<width;
+        x+=CONFIG.gridSize
+    ){
 
-
-            let depth =
-            y + grid.offset;
+        ctx.beginPath();
 
 
-            let perspective =
-            horizon +
-            (depth-horizon)
-            *
-            1.4;
+        ctx.moveTo(
+            x,
+            -height
+        );
 
 
-
-            ctx.beginPath();
-
-
-            ctx.moveTo(
-                0,
-                perspective
-            );
+        ctx.lineTo(
+            x,
+            height
+        );
 
 
-            ctx.lineTo(
-                width,
-                perspective
-            );
-
-
-            ctx.strokeStyle =
-            "rgba(0,150,255,.35)";
-
-
-            ctx.stroke();
-
-
-        }
+        ctx.stroke();
 
     }
 
 
 
-    function animate(){
+    /*
+    Moving neon wave
+    */
+
+    offset += CONFIG.speed;
 
 
-        grid.offset += grid.speed;
+    ctx.strokeStyle =
+        "rgba(0,255,120,0.55)";
 
 
-        if(
-            grid.offset >
-            grid.size
-        ){
-
-            grid.offset = 0;
-
-        }
-
-
-
-        drawBackground();
+    ctx.lineWidth = 2;
 
 
 
-        requestAnimationFrame(
-            animate
+    ctx.beginPath();
+
+
+    for(
+        let x=-width;
+        x<width;
+        x+=20
+    ){
+
+        let y =
+        Math.sin(
+            (x + offset) * 0.015
+        ) * 40;
+
+
+        ctx.lineTo(
+            x,
+            y
         );
 
     }
 
 
+    ctx.stroke();
 
-    animate();
+
+
+    ctx.restore();
+
+
+
+    requestAnimationFrame(draw);
+
+}
+
+
+
+draw();
+
+
+
+
+/*
+================================
+KEEP ABOVE BACKGROUND
+================================
+*/
+
+const style = document.createElement("style");
+
+style.innerHTML = `
+
+#${CONFIG.id}{
+    mix-blend-mode:screen;
+}
+
+body > *:not(#${CONFIG.id}){
+    position:relative;
+    z-index:1;
+}
+
+`;
+
+document.head.appendChild(style);
 
 
 
