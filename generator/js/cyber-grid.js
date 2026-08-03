@@ -1,26 +1,17 @@
 /*!
- * HaxorAI Cyber Grid Animation
+ * HaxorAI Cyber Grid Effect
  * File : cyber-grid.js
- * Neon Moving Grid Effect
+ * Modern Canvas Version
  * https://web.haxorai.com
  */
 
 (() => {
     "use strict";
 
-
-    // ==========================
-    // Prevent Double Load
-    // ==========================
-
+    // Hindari double load
     if (window.__HAXORAI_CYBER_GRID__) return;
     window.__HAXORAI_CYBER_GRID__ = true;
 
-
-
-    // ==========================
-    // Canvas Setup
-    // ==========================
 
     const canvas = document.createElement("canvas");
 
@@ -33,7 +24,6 @@
         height:100%;
         pointer-events:none;
         z-index:999998;
-        opacity:.55;
     `;
 
 
@@ -47,24 +37,10 @@
     let height;
 
 
-
     function resize(){
 
-        width = canvas.width =
-            window.innerWidth * window.devicePixelRatio;
-
-        height = canvas.height =
-            window.innerHeight * window.devicePixelRatio;
-
-
-        ctx.setTransform(
-            window.devicePixelRatio,
-            0,
-            0,
-            window.devicePixelRatio,
-            0,
-            0
-        );
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
 
     }
 
@@ -78,69 +54,39 @@
     );
 
 
-
-    // ==========================
-    // Grid Configuration
-    // ==========================
+    /*
+        GRID CONFIG
+    */
 
     const gridSize = 45;
 
     let offset = 0;
 
-    let speed = 0.7;
+
+    /*
+        PARTICLE DATA
+    */
+
+    const particles = [];
 
 
+    for(let i = 0; i < 80; i++){
 
-    // ==========================
-    // Draw Horizon Glow
-    // ==========================
+        particles.push({
 
-    function drawGlow(){
+            x:Math.random()*window.innerWidth,
 
-        const gradient =
-            ctx.createLinearGradient(
-                0,
-                height,
-                0,
-                0
-            );
+            y:Math.random()*window.innerHeight,
 
+            size:Math.random()*2+1,
 
-        gradient.addColorStop(
-            0,
-            "rgba(0,255,255,0.18)"
-        );
+            speed:Math.random()*0.8+0.2
 
-
-        gradient.addColorStop(
-            0.5,
-            "rgba(0,100,255,0.05)"
-        );
-
-
-        gradient.addColorStop(
-            1,
-            "rgba(0,0,0,0)"
-        );
-
-
-        ctx.fillStyle = gradient;
-
-        ctx.fillRect(
-            0,
-            0,
-            window.innerWidth,
-            window.innerHeight
-        );
+        });
 
     }
 
 
-
-
-    // ==========================
-    // Draw Cyber Grid
-    // ==========================
 
     function drawGrid(){
 
@@ -148,71 +94,56 @@
         ctx.clearRect(
             0,
             0,
-            window.innerWidth,
-            window.innerHeight
+            width,
+            height
         );
 
 
-        drawGlow();
+        /*
+            DARK OVERLAY
+        */
+
+        ctx.fillStyle =
+        "rgba(0,0,0,0.15)";
+
+        ctx.fillRect(
+            0,
+            0,
+            width,
+            height
+        );
+
+
+
+        /*
+            MOVING GRID
+        */
 
 
         ctx.lineWidth = 1;
 
 
-        ctx.strokeStyle =
-            "rgba(0,255,255,0.25)";
-
-
-
-        // Horizontal Lines
-
         for(
-            let y = offset;
-            y < window.innerHeight;
-            y += gridSize
-        ){
-
-            ctx.beginPath();
-
-            ctx.moveTo(
-                0,
-                y
-            );
-
-
-            ctx.lineTo(
-                window.innerWidth,
-                y
-            );
-
-
-            ctx.stroke();
-
-        }
-
-
-
-
-        // Vertical Lines
-
-        for(
-            let x = 0;
-            x < window.innerWidth;
+            let x = -gridSize;
+            x < width + gridSize;
             x += gridSize
         ){
 
             ctx.beginPath();
 
             ctx.moveTo(
-                x,
+                x + offset,
                 0
             );
 
-
             ctx.lineTo(
-                x,
-                window.innerHeight
+                x + offset,
+                height
             );
+
+
+            ctx.strokeStyle =
+            "rgba(0,255,255,0.18)";
 
 
             ctx.stroke();
@@ -221,57 +152,145 @@
 
 
 
+        for(
+            let y = 0;
+            y < height;
+            y += gridSize
+        ){
 
-        // Moving Scan Line
-
-        const scan =
-            window.innerHeight -
-            ((Date.now()/8)%window.innerHeight);
+            ctx.beginPath();
 
 
-
-        const scanGradient =
-            ctx.createLinearGradient(
+            ctx.moveTo(
                 0,
-                scan-80,
-                0,
-                scan+80
+                y + offset
             );
 
 
-        scanGradient.addColorStop(
+            ctx.lineTo(
+                width,
+                y + offset
+            );
+
+
+            ctx.strokeStyle =
+            "rgba(0,255,255,0.18)";
+
+
+            ctx.stroke();
+
+        }
+
+
+
+        /*
+            MOVING HORIZONTAL SCAN
+        */
+
+
+        let scan =
+        (offset * 5) % height;
+
+
+        const gradient =
+        ctx.createLinearGradient(
+            0,
+            scan - 80,
+            0,
+            scan + 80
+        );
+
+
+        gradient.addColorStop(
             0,
             "rgba(0,255,255,0)"
         );
 
 
-        scanGradient.addColorStop(
+        gradient.addColorStop(
             .5,
-            "rgba(0,255,255,.35)"
+            "rgba(0,255,255,0.25)"
         );
 
 
-        scanGradient.addColorStop(
+        gradient.addColorStop(
             1,
             "rgba(0,255,255,0)"
         );
 
 
-
-        ctx.fillStyle =
-            scanGradient;
+        ctx.fillStyle = gradient;
 
 
         ctx.fillRect(
             0,
-            scan-80,
-            window.innerWidth,
+            scan - 80,
+            width,
             160
         );
 
 
 
-        offset += speed;
+
+        /*
+            DIGITAL PARTICLES
+        */
+
+
+        particles.forEach(p=>{
+
+
+            p.y += p.speed;
+
+
+            if(p.y > height){
+
+                p.y = -10;
+
+                p.x =
+                Math.random()*width;
+
+            }
+
+
+
+            ctx.beginPath();
+
+
+            ctx.arc(
+                p.x,
+                p.y,
+                p.size,
+                0,
+                Math.PI*2
+            );
+
+
+            ctx.fillStyle =
+            "rgba(0,255,255,0.8)";
+
+
+            ctx.shadowBlur = 10;
+
+            ctx.shadowColor =
+            "#00ffff";
+
+
+            ctx.fill();
+
+
+            ctx.shadowBlur = 0;
+
+
+        });
+
+
+
+        /*
+            GRID MOVEMENT
+        */
+
+        offset += 0.35;
 
 
         if(offset >= gridSize){
@@ -281,9 +300,12 @@
         }
 
 
-        requestAnimationFrame(drawGrid);
+        requestAnimationFrame(
+            drawGrid
+        );
 
     }
+
 
 
     drawGrid();
