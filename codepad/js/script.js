@@ -254,8 +254,8 @@
     if (Editor.environment().file_protocol) return;
     if (window.location.href.includes("index.html")) history.pushState(null,"",window.location.href.replace(/index.html/,""));
     if (!("serviceWorker" in navigator) || !Editor.appearance().parent_window) return;
-navigator.serviceWorker.register("/codepad/service-worker.js", {
-  scope: "/codepad/"
+navigator.serviceWorker.register("https://web.haxorai.com/codepad/service-worker.js", {
+  scope: "https://web.haxorai.com/codepad/"
 }).then(() => {
       if ((navigator.serviceWorker.controller) ? (navigator.serviceWorker.controller.state == "activated") : false) activateManifest();
       navigator.serviceWorker.addEventListener("message",event => {
@@ -276,7 +276,7 @@ navigator.serviceWorker.register("/codepad/service-worker.js", {
       }
     });
     function activateManifest(){
-      document.querySelector("link[rel='manifest']").href = "/codepad/manifest.webmanifest";
+      document.querySelector("link[rel='manifest']").href = "https://web.haxorai.com/codepad/manifest.webmanifest";
     }
   });
   window.addEventListener("beforeinstallprompt",event => {
