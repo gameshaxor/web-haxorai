@@ -22,7 +22,7 @@ self.Editor = {
     }
     if (event.request.url === `${self.location.href.match("(.*\/).*")[1]}manifest.webmanifest`){
       return event.respondWith(caches.match(event.request).then(response => {
-        return response || fetch("manifest.webmanifest").then(async request => {
+        return response || fetch("https://web.haxorai.com/codepad/manifest.webmanifest").then(async request => {
           const manifest = await request.json();
           manifest.icons = manifest.icons.filter(icon => {
             if (!Editor.environment().macOS_device && icon.platform !== "macOS") return icon;
