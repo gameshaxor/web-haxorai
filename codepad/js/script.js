@@ -254,62 +254,28 @@
     if (Editor.environment().file_protocol) return;
     if (window.location.href.includes("index.html")) history.pushState(null,"",window.location.href.replace(/index.html/,""));
     if (!("serviceWorker" in navigator) || !Editor.appearance().parent_window) return;
-navigator.serviceWorker.register("/codepad/service-worker.js", {
-  scope: "/codepad/"
-}).then(() => {
-  if (
-    navigator.serviceWorker.controller &&
-    navigator.serviceWorker.controller.state === "activated"
-  ) {
-    activateManifest();
-  }
-
-  navigator.serviceWorker.addEventListener("message", event => {
-    if (event.data.action === "service-worker-activated") {
-      activateManifest();
-    }
-
-    if (event.data.action === "clear-site-caches-complete") {
-      cleared_cache_card.open();
-    }
-
-    if (event.data.action === "share-target") {
-      event.data.files.forEach(file => {
-        const reader = new FileReader();
-        reader.readAsText(file, "UTF-8");
-
-        reader.addEventListener("loadend", () => {
-          createEditor({
-            name: file.name,
-            value: reader.result
+    navigator.serviceWorker.register("https://web.haxorai.com/codepad/service-worker.js").then(() => {
+      if ((navigator.serviceWorker.controller) ? (navigator.serviceWorker.controller.state == "activated") : false) activateManifest();
+      navigator.serviceWorker.addEventListener("message",event => {
+        if (event.data.action == "service-worker-activated") activateManifest();
+        if (event.data.action == "clear-site-caches-complete") cleared_cache_card.open();
+        if (event.data.action == "share-target"){
+          event.data.files.forEach(file => {
+            var reader = new FileReader();
+            reader.readAsText(file,"UTF-8");
+            reader.addEventListener("loadend",() => createEditor({ name: file.name, value: reader.result }));
           });
-        });
+        }
       });
+      document.documentElement.classList.add("service-worker-activated");
+      if (queryParameters.get("share-target")){
+        navigator.serviceWorker.controller.postMessage({ action: "share-target" });
+        removeQueryParameters(["share-target"]);
+      }
+    });
+    function activateManifest(){
+      document.querySelector("link[rel='manifest']").href = "https://web.haxorai.com/codepad/manifest.webmanifest";
     }
-  });
-
-  document.documentElement.classList.add("service-worker-activated");
-
-  if (queryParameters.get("share-target")) {
-    if (navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        action: "share-target"
-      });
-    }
-
-    removeQueryParameters(["share-target"]);
-  }
-}).catch(error => {
-  console.error("Codepad Service Worker registration failed:", error);
-});
-
-function activateManifest() {
-  const manifest = document.querySelector("link[rel='manifest']");
-
-  if (manifest) {
-    manifest.href = "/codepad/manifest.webmanifest";
-  }
-}
   });
   window.addEventListener("beforeinstallprompt",event => {
     event.preventDefault();
@@ -978,26 +944,14 @@ anchor.download = `codepad-haxorai-${randomNumber}.${extension}`;
     var address = window.location.pathname + query;
     history.pushState(null,"",address);
   }
-async function showInstallPrompt() {
-  if (!Editor.install_prompt) {
-    console.info(
-      "Install prompt belum tersedia. Periksa dukungan instalasi browser."
-    );
-    return;
+  function showInstallPrompt(){
+    Editor.install_prompt.prompt();
+    Editor.install_prompt.userChoice.then(result => {
+      if (result.outcome != "accepted") return;
+      document.documentElement.classList.remove("install-prompt-available");
+      theme_button.childNodes[0].textContent = "Customize Theme";
+    });
   }
-
-  const installPrompt = Editor.install_prompt;
-  installPrompt.prompt();
-
-  const result = await installPrompt.userChoice;
-
-  Editor.install_prompt = null;
-
-  if (result.outcome === "accepted") {
-    document.documentElement.classList.remove("install-prompt-available");
-    theme_button.childNodes[0].textContent = "Customize Theme";
-  }
-}
   function clearSiteCaches(){
     if (confirm("Are you sure you would like to clear all app caches?\nSmart Text Editor will no longer work offline until an Internet connection is available.")) navigator.serviceWorker.controller.postMessage({ action: "clear-site-caches" });
   }
