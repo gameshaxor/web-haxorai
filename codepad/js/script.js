@@ -254,7 +254,7 @@
     if (Editor.environment().file_protocol) return;
     if (window.location.href.includes("index.html")) history.pushState(null,"",window.location.href.replace(/index.html/,""));
     if (!("serviceWorker" in navigator) || !Editor.appearance().parent_window) return;
-    navigator.serviceWorker.register("https://web.haxorai.com/codepad/service-worker.js").then(() => {
+    navigator.serviceWorker.register("service-worker.js").then(() => {
       if ((navigator.serviceWorker.controller) ? (navigator.serviceWorker.controller.state == "activated") : false) activateManifest();
       navigator.serviceWorker.addEventListener("message",event => {
         if (event.data.action == "service-worker-activated") activateManifest();
@@ -273,9 +273,13 @@
         removeQueryParameters(["share-target"]);
       }
     });
-    function activateManifest(){
-      document.querySelector("link[rel='manifest']").href = "https://web.haxorai.com/codepad/manifest.webmanifest";
-    }
+function activateManifest() {
+  const manifest = document.querySelector("link[rel='manifest']");
+
+  if (manifest) {
+    manifest.href = "https://web.haxorai.com/codepad/manifest.webmanifest";
+  }
+}
   });
   window.addEventListener("beforeinstallprompt",event => {
     event.preventDefault();
