@@ -273,13 +273,9 @@
         removeQueryParameters(["share-target"]);
       }
     });
-function activateManifest() {
-  const manifest = document.querySelector("link[rel='manifest']");
-
-  if (manifest) {
-    manifest.href = "https://web.haxorai.com/codepad/manifest.webmanifest";
-  }
-}
+    function activateManifest(){
+      document.querySelector("link[rel='manifest']").href = "manifest.webmanifest";
+    }
   });
   window.addEventListener("beforeinstallprompt",event => {
     event.preventDefault();
