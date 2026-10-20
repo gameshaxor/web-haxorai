@@ -15,7 +15,9 @@ self.Editor = {
   });
   self.addEventListener("fetch",event => {
     if (event.request.method == "POST"){
-      event.respondWith(Response.redirect("/?share-target=true",303));
+event.respondWith(
+  Response.redirect("/codepad/?share-target=true", 303)
+);
       return event.waitUntil((async () => {
         Editor.share_files = Array.from(await event.request.formData()).map(file => file[1]);
       })());
