@@ -2,7 +2,7 @@
   "name": "Smart Text Editor",
   "short_name": "Text Editor",
   "description": "The text editor that requires only a browser and a keyboard!",
-  "start_url": "./codepad",
+  "start_url": "./codepad.html",
   "scope": "./",
   "display": "standalone",
   "display_override": ["window-controls-overlay"],
